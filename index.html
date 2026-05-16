@@ -536,11 +536,121 @@ section { position: relative; z-index: 1; }
   border-color: rgba(0,255,135,0.2);
   color: rgba(0,255,135,0.7);
 }
+
+/* ── grid positions: rows 1–2 (unchanged) ── */
 .card-offense  { grid-column: 1 / 8;  grid-row: 1; }
 .card-defense  { grid-column: 8 / 13; grid-row: 1; }
 .card-intel    { grid-column: 1 / 5;  grid-row: 2; }
 .card-forensics{ grid-column: 5 / 9;  grid-row: 2; }
 .card-cloud    { grid-column: 9 / 13; grid-row: 2; }
+
+/* ── PortScanner: row 3, full width, horizontal layout ── */
+.card-portscanner {
+  grid-column: 1 / 13;
+  grid-row: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0;
+  position: relative;
+}
+.card-portscanner .ps-left {
+  padding: 48px;
+  flex: 0 0 42%;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+.card-portscanner .ps-right {
+  padding: 48px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card-portscanner .card-num {
+  font-size: 120px;
+}
+.card-portscanner .card-title {
+  font-size: clamp(40px, 4vw, 60px);
+}
+.card-portscanner .card-desc {
+  max-width: 520px;
+}
+
+/* new-release pulse badge */
+.card-new-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(0,255,135,0.25);
+  padding: 4px 10px;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+.card-new-badge .new-dot {
+  width: 5px; height: 5px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+/* ps tech grid on the right panel */
+.ps-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: auto;
+}
+.ps-tech-item {
+  padding: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background .25s, border-color .25s;
+}
+.card-portscanner:hover .ps-tech-item {
+  border-color: rgba(0,255,135,0.12);
+}
+.ps-tech-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.2);
+}
+.ps-tech-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(240,237,232,0.6);
+  transition: color .25s;
+}
+.card-portscanner:hover .ps-tech-val { color: rgba(0,255,135,0.75); }
+
+/* scan animation on hover */
+.ps-scan-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, var(--green) 50%, transparent 100%);
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity .3s;
+}
+.card-portscanner:hover .ps-scan-line {
+  opacity: 0.5;
+  animation: scan-sweep 2s linear infinite;
+}
+@keyframes scan-sweep {
+  from { transform: translateY(0); }
+  to   { transform: translateY(var(--card-h, 300px)); }
+}
 
 #projects {
   padding: 120px 48px;
@@ -951,9 +1061,18 @@ footer {
   .scroll-indicator { display: none; }
   #Projetos, #projects, #contact, #toolkit { padding: 80px 24px; }
   .bento-grid { grid-template-columns: 1fr; }
-  .card-offense, .card-defense, .card-intel, .card-forensics, .card-cloud {
+  .card-offense, .card-defense, .card-intel, .card-forensics, .card-cloud, .card-portscanner {
     grid-column: 1; grid-row: auto;
   }
+  .card-portscanner {
+    flex-direction: column;
+  }
+  .card-portscanner .ps-left {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex: none;
+  }
+  .ps-tech-grid { grid-template-columns: repeat(2, 1fr); }
   .section-title { padding: 0 24px; }
   #toolkit { grid-template-columns: 1fr; }
   .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1126,6 +1245,16 @@ footer {
   <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
   <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Parrot</span></div>
   <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
+  <!-- duplicata para loop infinito -->
+  <div class="ticker-item"><span class="ticker-label">SIEM</span><span class="ticker-value">Wazuh</span></div>
+  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Linux</span></div>
+  <div class="ticker-item"><span class="ticker-label">Logs</span><span class="ticker-value">ELK Stack</span></div>
+  <div class="ticker-item"><span class="ticker-label">Network</span><span class="ticker-value">Wireshark</span></div>
+  <div class="ticker-item"><span class="ticker-label">EDR</span><span class="ticker-value">Simulação</span></div>
+  <div class="ticker-item"><span class="ticker-label">Offensive</span><span class="ticker-value">Nmap</span></div>
+  <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
+  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Parrot</span></div>
+  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
   </div>
 </div>
 
@@ -1136,6 +1265,8 @@ footer {
   </div>
 
   <div class="bento-grid">
+
+    <!-- ROW 1 -->
     <a href="https://github.com/Liragbr/GhostRunner" target="_blank" rel="noopener noreferrer" class="bento-card card-offense reveal">
       <div class="card-glow"></div>
       <div class="card-num">01</div>
@@ -1170,6 +1301,7 @@ footer {
       </div>
     </a>
 
+    <!-- ROW 2 -->
     <a href="https://github.com/Liragbr/IPAdress" target="_blank" rel="noopener noreferrer" class="bento-card card-intel reveal">
       <div class="card-glow"></div>
       <div class="card-num">03</div>
@@ -1221,7 +1353,81 @@ footer {
         <span class="badge">RED TEAMING</span>
       </div>
     </a>
-  </div>
+
+    <!-- ROW 3 — PORT SCANNER (featured, full-width, horizontal) -->
+    <a href="https://github.com/Liragbr/PortScanner"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="bento-card card-portscanner reveal reveal-delay-1"
+       id="ps-card">
+      <div class="card-glow"></div>
+      <div class="ps-scan-line"></div>
+      <div class="card-num">06</div>
+
+      <!-- esquerda: identidade do projeto -->
+      <div class="ps-left">
+        <div class="card-new-badge">
+          <span class="new-dot"></span>
+          Novo — v1.0.0
+        </div>
+        <!-- ícone: ondas de radar / scan -->
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="12" cy="12" r="1.5"/>
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" stroke-opacity=".25"/>
+          <path d="M12 5a7 7 0 1 1 0 14A7 7 0 0 1 12 5z" stroke-opacity=".45"/>
+          <path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" stroke-opacity=".7"/>
+          <line x1="12" y1="12" x2="19" y2="6" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <span class="card-tag">PORT SCANNING / NETWORK RECON</span>
+        <h3 class="card-title">Port Scanner<br/>Async Engine</h3>
+        <div class="card-badges">
+          <span class="badge">PYTHON</span>
+          <span class="badge">ASYNCIO</span>
+          <span class="badge">SCAPY</span>
+          <span class="badge">SYN STEALTH</span>
+          <span class="badge">RICH TUI</span>
+          <span class="badge">PYINSTALLER</span>
+        </div>
+      </div>
+
+      <!-- direita: descrição técnica + tech grid -->
+      <div class="ps-right">
+        <div>
+          <p class="card-desc">
+            Motor de varredura de portas TCP assíncrono construído com <strong style="color:rgba(240,237,232,0.75);font-weight:400">asyncio</strong> — centenas de portas escaneadas em paralelo sem overhead de threads. Implementa SYN scan half-open via <strong style="color:rgba(240,237,232,0.75);font-weight:400">Scapy</strong> para varredura stealth sem completar o handshake TCP, com dashboard TUI brutalista e exportação de relatórios JSON prontos para ingestão em SIEMs.
+          </p>
+        </div>
+
+        <div class="ps-tech-grid">
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Motor</span>
+            <span class="ps-tech-val">asyncio</span>
+          </div>
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Stealth Mode</span>
+            <span class="ps-tech-val">SYN Half-Open</span>
+          </div>
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Interface</span>
+            <span class="ps-tech-val">Rich TUI</span>
+          </div>
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Output</span>
+            <span class="ps-tech-val">JSON / SIEM</span>
+          </div>
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Release</span>
+            <span class="ps-tech-val">v1.0.0 .exe</span>
+          </div>
+          <div class="ps-tech-item">
+            <span class="ps-tech-label">Linguagem</span>
+            <span class="ps-tech-val">Python 3.10+</span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div><!-- /bento-grid -->
 </section>
 
 <section id="projects">
@@ -1284,6 +1490,7 @@ footer {
       </div>
     </div>
   </div>
+</section>
 
 <section id="toolkit">
   <div class="toolkit-left reveal">
@@ -1465,6 +1672,15 @@ function toggleProject(e, detailId) {
     detail.classList.add('open');
     wrapper.classList.add('expanded');
   }
+}
+
+// ajusta a altura do card para a animação de scan
+const psCard = document.getElementById('ps-card');
+if (psCard) {
+  const ro = new ResizeObserver(() => {
+    psCard.style.setProperty('--card-h', psCard.offsetHeight + 'px');
+  });
+  ro.observe(psCard);
 }
 
 (function() {
