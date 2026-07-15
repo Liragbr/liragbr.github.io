@@ -154,10 +154,12 @@ section { position:relative; z-index:1; }
   display: flex; 
   align-items: center; 
   justify-content: center;
-
+  border: 1px solid var(--border);
   flex-shrink: 0;
   padding: 8px;
-  transition: border-color .35s; }
+  transition: border-color .35s;
+}
+.exp-row:hover .exp-logo { border-color:rgba(0,255,135,0.2); }
 .exp-logo svg { width:100%; height:auto; }
 
 #toolkit { padding:120px 48px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
@@ -420,8 +422,7 @@ footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; al
     </div>
     <!-- GarageTech logo SVG in green -->
     <div class="exp-logo">
-  <img src="garagetech_logo2.svg" alt="GarageTech" 
-       style="width:100%; height:auto; filter: brightness(0) saturate(100%) invert(68%) sepia(98%) saturate(400%) hue-rotate(100deg) brightness(110%);" />
+  <img src="garagetech-logo.svg" alt="GarageTech" style="width:100%; height:auto;" />
 </div>  
 </section>
 
