@@ -9,1153 +9,218 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --black:   #060608;
-  --white:   #f0ede8;
-  --green:   #00ff87;
-  --green-d: #00c96b;
-  --grey:    rgba(240,237,232,0.12);
-  --grey-d:  rgba(240,237,232,0.05);
-  --border:  rgba(240,237,232,0.07);
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --black:#060608; --white:#f0ede8; --green:#00ff87; --green-d:#00c96b;
+  --grey:rgba(240,237,232,0.12); --grey-d:rgba(240,237,232,0.05);
+  --border:rgba(240,237,232,0.07);
+  --font-display:'Bebas Neue',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
 }
+html { scroll-behavior:smooth; overflow-x:hidden; }
+body { background:var(--black); color:var(--white); font-family:var(--font-body); font-weight:300; cursor:none; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--green); color:var(--black); }
+#cursor { position:fixed; top:0; left:0; width:12px; height:12px; border:1.5px solid var(--green); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .25s,height .25s,background .25s; }
+#cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(0,255,135,0.25); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:transform .12s ease-out,width .3s,height .3s; }
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width:6px; height:6px; background:var(--green); }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width:56px; height:56px; border-color:rgba(0,255,135,0.5); }
+body::before { content:''; position:fixed; inset:0; z-index:0; opacity:.035; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:200px; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--black); }
+::-webkit-scrollbar-thumb { background:var(--green); }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:24px 48px; }
+nav::after { content:''; position:absolute; bottom:0; left:48px; right:48px; height:1px; background:var(--border); }
+.nav-logo { font-family:var(--font-mono); font-size:11px; letter-spacing:.2em; color:var(--green); text-transform:uppercase; text-decoration:none; }
+.nav-links { display:flex; align-items:center; gap:40px; list-style:none; }
+.nav-links a { font-family:var(--font-mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(240,237,232,0.4); text-decoration:none; transition:color .25s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--green); transition:width .3s ease; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a:hover::after { width:100%; }
+.nav-status { display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:10px; color:rgba(240,237,232,0.3); letter-spacing:.15em; text-transform:uppercase; }
+.status-dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse-green 2s ease-in-out infinite; }
+@keyframes pulse-green { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,135,0.4)} 50%{opacity:.7;box-shadow:0 0 0 6px rgba(0,255,135,0)} }
+#hero { position:relative; min-height:100svh; display:grid; grid-template-rows:1fr auto; padding:0 48px 48px; padding-top:120px; overflow:hidden; }
+.hero-eyebrow { display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+.hero-eyebrow-line { width:40px; height:1px; background:var(--green); flex-shrink:0; }
+.hero-eyebrow span { font-family:var(--font-mono); font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--green); }
+.hero-main { display:flex; flex-direction:column; justify-content:center; flex:1; padding-bottom:40px; }
+h1.hero-title { font-family:var(--font-display); font-size:clamp(64px,10vw,150px); line-height:.92; letter-spacing:.01em; color:var(--white); position:relative; z-index:1; }
+.hero-sub { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:end; margin-top:64px; padding-top:48px; border-top:1px solid var(--border); }
+.hero-desc { font-size:15px; line-height:1.75; color:rgba(240,237,232,0.45); max-width:440px; }
+.hero-desc strong { color:var(--white); font-weight:400; }
+.highlight-green { color:var(--green) !important; }
+.hero-cta { display:flex; align-items:center; justify-content:flex-end; gap:20px; }
+.btn-primary { display:inline-flex; align-items:center; gap:12px; padding:16px 32px; background:var(--green); color:var(--black); font-family:var(--font-mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; text-decoration:none; border:none; cursor:none; font-weight:500; transition:background .25s,transform .25s; clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px)); }
+.btn-primary:hover { background:var(--green-d); transform:translateY(-2px); }
+.btn-primary svg { width:14px; height:14px; }
+.btn-ghost { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:rgba(240,237,232,0.35); text-decoration:none; transition:color .25s; }
+.btn-ghost:hover { color:var(--white); }
+.scroll-indicator { position:absolute; right:48px; bottom:48px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.scroll-indicator span { font-family:var(--font-mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(240,237,232,0.2); writing-mode:vertical-rl; }
+.scroll-line { width:1px; height:60px; background:linear-gradient(to bottom,var(--green),transparent); animation:scroll-anim 2s ease-in-out infinite; }
+@keyframes scroll-anim { 0%{transform:scaleY(0);transform-origin:top;opacity:1} 50%{transform:scaleY(1);transform-origin:top;opacity:1} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom;opacity:0} }
+.hero-bg-num { position:absolute; right:-20px; bottom:80px; font-family:var(--font-display); font-size:clamp(200px,30vw,420px); line-height:1; color:rgba(240,237,232,0.015); pointer-events:none; user-select:none; z-index:0; }
+#ticker { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:20px 0; overflow:hidden; position:relative; }
+#ticker::before,#ticker::after { content:''; position:absolute; top:0; bottom:0; width:120px; z-index:2; pointer-events:none; }
+#ticker::before { left:0; background:linear-gradient(to right,var(--black),transparent); }
+#ticker::after { right:0; background:linear-gradient(to left,var(--black),transparent); }
+.ticker-track { display:flex; animation:ticker-scroll 30s linear infinite; width:max-content; }
+.ticker-track:hover { animation-play-state:paused; }
+@keyframes ticker-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.ticker-item { display:flex; align-items:center; gap:32px; padding:0 64px; white-space:nowrap; border-right:1px solid var(--border); }
+.ticker-label { font-family:var(--font-mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(240,237,232,0.3); }
+.ticker-value { font-family:var(--font-display); font-size:28px; color:var(--green); letter-spacing:.05em; }
+section { position:relative; z-index:1; }
+.section-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:80px; }
+.section-num { font-family:var(--font-mono); font-size:10px; letter-spacing:.2em; color:var(--green); padding-top:6px; }
+.section-title { font-family:var(--font-display); font-size:clamp(48px,6vw,88px); line-height:1; letter-spacing:.02em; color:var(--white); flex:1; padding:0 48px; }
+.section-subtitle { font-size:13px; line-height:1.7; color:rgba(240,237,232,0.35); max-width:260px; font-family:var(--font-mono); letter-spacing:.03em; }
+#Projetos { padding:120px 48px; border-top:1px solid var(--border); }
+.bento-grid { display:grid; grid-template-columns:repeat(12,1fr); gap:2px; }
+.bento-card { text-decoration:none; color:inherit; position:relative; padding:48px; background:var(--grey-d); border:1px solid var(--border); overflow:hidden; transition:background .35s,border-color .35s; cursor:none; }
+.bento-card:hover { background:rgba(240,237,232,0.04); border-color:rgba(240,237,232,0.12); }
+.bento-card:hover .card-glow { opacity:1; }
+.bento-card:hover .card-icon { color:var(--green); }
+.bento-card:hover .card-num { opacity:.15; }
+.bento-card::before { content:''; position:absolute; top:0; left:0; width:40px; height:1px; background:var(--green); opacity:0; transition:opacity .35s; }
+.bento-card::after { content:''; position:absolute; top:0; left:0; width:1px; height:40px; background:var(--green); opacity:0; transition:opacity .35s; }
+.bento-card:hover::before,.bento-card:hover::after { opacity:1; }
+.card-glow { position:absolute; inset:0; background:radial-gradient(circle at top left,rgba(0,255,135,0.04) 0%,transparent 60%); opacity:0; transition:opacity .5s; pointer-events:none; }
+.card-num { position:absolute; bottom:24px; right:32px; font-family:var(--font-display); font-size:80px; line-height:1; color:var(--white); opacity:.04; transition:opacity .35s; pointer-events:none; user-select:none; }
+.card-icon { width:28px; height:28px; color:rgba(240,237,232,0.2); margin-bottom:40px; transition:color .35s; }
+.card-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--green); margin-bottom:16px; display:block; }
+.card-title { font-family:var(--font-display); font-size:36px; letter-spacing:.02em; color:var(--white); margin-bottom:20px; line-height:1.05; }
+.card-desc { font-size:13.5px; line-height:1.75; color:rgba(240,237,232,0.4); max-width:380px; }
+.card-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:32px; }
+.badge { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; padding:5px 12px; border:1px solid var(--border); color:rgba(240,237,232,0.3); transition:border-color .25s,color .25s; }
+.bento-card:hover .badge { border-color:rgba(0,255,135,0.2); color:rgba(0,255,135,0.7); }
+.card-offense{grid-column:1/8;grid-row:1} .card-defense{grid-column:8/13;grid-row:1}
+.card-intel{grid-column:1/5;grid-row:2} .card-forensics{grid-column:5/9;grid-row:2} .card-cloud{grid-column:9/13;grid-row:2}
+.card-portscanner { grid-column:1/13; grid-row:3; display:flex; align-items:flex-start; gap:0; padding:0; position:relative; }
+.card-portscanner .ps-left { padding:48px; flex:0 0 42%; border-right:1px solid var(--border); display:flex; flex-direction:column; }
+.card-portscanner .ps-right { padding:48px; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
+.card-portscanner .card-num { font-size:120px; }
+.card-portscanner .card-title { font-size:clamp(40px,4vw,60px); }
+.card-portscanner .card-desc { max-width:520px; }
+.card-new-badge { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--green); border:1px solid rgba(0,255,135,0.25); padding:4px 10px; margin-bottom:20px; width:fit-content; }
+.card-new-badge .new-dot { width:5px; height:5px; background:var(--green); border-radius:50%; animation:pulse-green 2s ease-in-out infinite; }
+.ps-tech-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:auto; }
+.ps-tech-item { padding:16px; border:1px solid var(--border); display:flex; flex-direction:column; gap:4px; transition:background .25s,border-color .25s; }
+.card-portscanner:hover .ps-tech-item { border-color:rgba(0,255,135,0.12); }
+.ps-tech-label { font-family:var(--font-mono); font-size:8px; letter-spacing:.15em; text-transform:uppercase; color:rgba(240,237,232,0.2); }
+.ps-tech-val { font-family:var(--font-mono); font-size:11px; color:rgba(240,237,232,0.6); transition:color .25s; }
+.card-portscanner:hover .ps-tech-val { color:rgba(0,255,135,0.75); }
+.ps-scan-line { position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(to right,transparent 0%,var(--green) 50%,transparent 100%); opacity:0; transition:opacity .3s; }
+.card-portscanner:hover .ps-scan-line { opacity:0.5; animation:scan-sweep 2s linear infinite; }
+@keyframes scan-sweep { from{transform:translateY(0)} to{transform:translateY(var(--card-h,300px))} }
 
-html { scroll-behavior: smooth; overflow-x: hidden; }
+/* ── EXPERIÊNCIA SECTION ── */
+#experience { padding:120px 48px; border-top:1px solid var(--border); }
+.exp-row {
+  display:grid;
+  grid-template-columns:80px 1fr auto;
+  align-items:start;
+  gap:48px;
+  padding:56px 0;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.exp-row::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--green); transform:scaleY(0);
+  transform-origin:bottom; transition:transform .35s ease;
+}
+.exp-row:hover::before { transform:scaleY(1); }
+.exp-num { font-family:var(--font-mono); font-size:11px; color:rgba(240,237,232,0.2); letter-spacing:.1em; padding-top:6px; }
+.exp-body { display:flex; flex-direction:column; gap:20px; }
+.exp-header { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.exp-company { font-family:var(--font-display); font-size:clamp(28px,3.5vw,48px); letter-spacing:.02em; color:var(--white); }
+.exp-role-badge {
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--black); background:var(--green);
+  padding:5px 14px; font-weight:500;
+}
+.exp-meta { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.exp-period { font-family:var(--font-mono); font-size:10px; color:rgba(240,237,232,0.25); letter-spacing:.12em; }
+.exp-location { font-family:var(--font-mono); font-size:10px; color:rgba(240,237,232,0.2); letter-spacing:.1em; }
+.exp-active-dot { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:9px; letter-spacing:.15em; color:var(--green); text-transform:uppercase; }
+.exp-desc { font-size:13.5px; line-height:1.8; color:rgba(240,237,232,0.4); max-width:560px; }
+.exp-stack { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.exp-pill { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; padding:5px 14px; border:1px solid rgba(0,255,135,0.2); color:rgba(0,255,135,0.6); }
+.exp-logo {
+  width:120px; height:120px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--border);
+  flex-shrink:0;
+  padding:16px;
+  transition:border-color .35s;
+}
+.exp-row:hover .exp-logo { border-color:rgba(0,255,135,0.2); }
+.exp-logo svg { width:100%; height:auto; }
 
-body {
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--font-body);
-  font-weight: 300;
-  cursor: none;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-::selection { background: var(--green); color: var(--black); }
-
-#cursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 12px; height: 12px;
-  border: 1.5px solid var(--green);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width .25s, height .25s, background .25s, border-color .25s;
-  mix-blend-mode: normal;
-}
-#cursor-ring {
-  position: fixed;
-  top: 0; left: 0;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(0,255,135,0.25);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform .12s ease-out, width .3s, height .3s, opacity .3s;
-}
-body:has(a:hover) #cursor,
-body:has(button:hover) #cursor {
-  width: 6px; height: 6px;
-  background: var(--green);
-}
-body:has(a:hover) #cursor-ring,
-body:has(button:hover) #cursor-ring {
-  width: 56px; height: 56px;
-  border-color: rgba(0,255,135,0.5);
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  opacity: .035;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
-}
-
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: var(--green); border-radius: 0; }
-
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 48px;
-  mix-blend-mode: normal;
-}
-nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 48px; right: 48px;
-  height: 1px;
-  background: var(--border);
-}
-.nav-logo {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .2em;
-  color: var(--green);
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  list-style: none;
-}
-.nav-links a {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.4);
-  text-decoration: none;
-  transition: color .25s;
-  position: relative;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0;
-  width: 0; height: 1px;
-  background: var(--green);
-  transition: width .3s ease;
-}
-.nav-links a:hover { color: var(--white); }
-.nav-links a:hover::after { width: 100%; }
-.nav-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: rgba(240,237,232,0.3);
-  letter-spacing: .15em;
-  text-transform: uppercase;
-}
-.status-dot {
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-green 2s ease-in-out infinite;
-}
-@keyframes pulse-green {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,135,0.4); }
-  50%       { opacity: .7; box-shadow: 0 0 0 6px rgba(0,255,135,0); }
-}
-
-#hero {
-  position: relative;
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  padding: 0 48px 48px;
-  padding-top: 120px;
-  overflow: hidden;
-}
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-.hero-eyebrow-line {
-  width: 40px; height: 1px;
-  background: var(--green);
-  flex-shrink: 0;
-}
-.hero-eyebrow span {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .25em;
-  text-transform: uppercase;
-  color: var(--green);
-}
-.hero-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  padding-bottom: 40px;
-}
-h1.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(64px, 10vw, 150px);
-  line-height: .92;
-  letter-spacing: .01em;
-  color: var(--white);
-  position: relative;
-  z-index: 1;
-}
-h1.hero-title .line-accent {
-  -webkit-text-stroke: 1px rgba(240,237,232,0.25);
-  color: transparent;
-  display: block;
-  position: relative;
-}
-h1.hero-title .line-accent .glitch-word {
-  position: relative;
-  display: inline-block;
-}
-h1.hero-title .line-accent .glitch-word::before,
-h1.hero-title .line-accent .glitch-word::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  -webkit-text-stroke: 1px rgba(240,237,232,0.25);
-  color: transparent;
-}
-h1.hero-title .line-accent .glitch-word::before {
-  animation: glitch-1 4.5s infinite;
-  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
-  color: transparent;
-  -webkit-text-stroke: 1px var(--green);
-}
-h1.hero-title .line-accent .glitch-word::after {
-  animation: glitch-2 4.5s infinite;
-  clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
-}
-@keyframes glitch-1 {
-  0%, 90%, 100% { transform: translate(0,0); opacity: 0; }
-  92%            { transform: translate(-3px,0); opacity: .9; }
-  94%            { transform: translate(3px,0);  opacity: .9; }
-  96%            { transform: translate(0,0);    opacity: 0;  }
-}
-@keyframes glitch-2 {
-  0%, 88%, 100% { transform: translate(0,0); opacity: 0; }
-  90%            { transform: translate(2px,1px); opacity: .7; }
-  92%            { transform: translate(-2px,0);  opacity: .7; }
-  94%            { transform: translate(0,0);     opacity: 0;  }
-}
-.hero-sub {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: end;
-  margin-top: 64px;
-  padding-top: 48px;
-  border-top: 1px solid var(--border);
-}
-.hero-desc {
-  font-size: 15px;
-  line-height: 1.75;
-  color: rgba(240,237,232,0.45);
-  max-width: 440px;
-}
-.hero-desc strong { color: var(--white); font-weight: 400; }
-.highlight-green { color: var(--green) !important; }
-.hero-cta {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 20px;
-}
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 32px;
-  background: var(--green);
-  color: var(--black);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: none;
-  cursor: none;
-  font-weight: 500;
-  transition: background .25s, transform .25s;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-}
-.btn-primary:hover { background: var(--green-d); transform: translateY(-2px); }
-.btn-primary svg { width: 14px; height: 14px; }
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.35);
-  text-decoration: none;
-  transition: color .25s;
-}
-.btn-ghost:hover { color: var(--white); }
-.scroll-indicator {
-  position: absolute;
-  right: 48px; bottom: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.scroll-indicator span {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.2);
-  writing-mode: vertical-rl;
-}
-.scroll-line {
-  width: 1px; height: 60px;
-  background: linear-gradient(to bottom, var(--green), transparent);
-  animation: scroll-anim 2s ease-in-out infinite;
-}
-@keyframes scroll-anim {
-  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
-  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
-  51%  { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
-}
-.hero-bg-num {
-  position: absolute;
-  right: -20px; bottom: 80px;
-  font-family: var(--font-display);
-  font-size: clamp(200px, 30vw, 420px);
-  line-height: 1;
-  color: rgba(240,237,232,0.015);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-#ticker {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 20px 0;
-  overflow: hidden;
-  position: relative;
-}
-#ticker::before, #ticker::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 120px;
-  z-index: 2;
-  pointer-events: none;
-}
-#ticker::before { left: 0; background: linear-gradient(to right, var(--black), transparent); }
-#ticker::after  { right: 0; background: linear-gradient(to left, var(--black), transparent); }
-.ticker-track {
-  display: flex;
-  gap: 0;
-  animation: ticker-scroll 30s linear infinite;
-  width: max-content;
-}
-.ticker-track:hover { animation-play-state: paused; }
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.ticker-item {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 64px;
-  white-space: nowrap;
-  border-right: 1px solid var(--border);
-}
-.ticker-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.3);
-}
-.ticker-value {
-  font-family: var(--font-display);
-  font-size: 28px;
-  color: var(--green);
-  letter-spacing: .05em;
-}
-
-section { position: relative; z-index: 1; }
-.section-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 80px;
-}
-.section-num {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .2em;
-  color: var(--green);
-  padding-top: 6px;
-}
-.section-title {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 6vw, 88px);
-  line-height: 1;
-  letter-spacing: .02em;
-  color: var(--white);
-  flex: 1;
-  padding: 0 48px;
-}
-.section-subtitle {
-  font-size: 13px;
-  line-height: 1.7;
-  color: rgba(240,237,232,0.35);
-  max-width: 260px;
-  font-family: var(--font-mono);
-  letter-spacing: .03em;
-}
-
-#Projetos {
-  padding: 120px 48px;
-  border-top: 1px solid var(--border);
-}
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto;
-  gap: 2px;
-}
-.bento-card {
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  padding: 48px;
-  background: var(--grey-d);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  transition: background .35s, border-color .35s;
-  cursor: none;
-}
-.bento-card:hover {
-  background: rgba(240,237,232,0.04);
-  border-color: rgba(240,237,232,0.12);
-}
-.bento-card:hover .card-glow { opacity: 1; }
-.bento-card:hover .card-icon { color: var(--green); }
-.bento-card:hover .card-num  { opacity: .15; }
-.bento-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 40px; height: 1px;
-  background: var(--green);
-  opacity: 0;
-  transition: opacity .35s, width .35s;
-}
-.bento-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 1px; height: 40px;
-  background: var(--green);
-  opacity: 0;
-  transition: opacity .35s, height .35s;
-}
-.bento-card:hover::before,
-.bento-card:hover::after { opacity: 1; }
-.card-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top left, rgba(0,255,135,0.04) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity .5s;
-  pointer-events: none;
-}
-.card-num {
-  position: absolute;
-  bottom: 24px; right: 32px;
-  font-family: var(--font-display);
-  font-size: 80px;
-  line-height: 1;
-  color: var(--white);
-  opacity: .04;
-  transition: opacity .35s;
-  pointer-events: none;
-  user-select: none;
-}
-.card-icon {
-  width: 28px; height: 28px;
-  color: rgba(240,237,232,0.2);
-  margin-bottom: 40px;
-  transition: color .35s;
-}
-.card-tag {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 16px;
-  display: block;
-}
-.card-title {
-  font-family: var(--font-display);
-  font-size: 36px;
-  letter-spacing: .02em;
-  color: var(--white);
-  margin-bottom: 20px;
-  line-height: 1.05;
-}
-.card-desc {
-  font-size: 13.5px;
-  line-height: 1.75;
-  color: rgba(240,237,232,0.4);
-  max-width: 380px;
-}
-.card-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 32px;
-}
-.badge {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  color: rgba(240,237,232,0.3);
-  transition: border-color .25s, color .25s;
-}
-.bento-card:hover .badge {
-  border-color: rgba(0,255,135,0.2);
-  color: rgba(0,255,135,0.7);
-}
-
-/* ── grid positions: rows 1–2 (unchanged) ── */
-.card-offense  { grid-column: 1 / 8;  grid-row: 1; }
-.card-defense  { grid-column: 8 / 13; grid-row: 1; }
-.card-intel    { grid-column: 1 / 5;  grid-row: 2; }
-.card-forensics{ grid-column: 5 / 9;  grid-row: 2; }
-.card-cloud    { grid-column: 9 / 13; grid-row: 2; }
-
-/* ── PortScanner: row 3, full width, horizontal layout ── */
-.card-portscanner {
-  grid-column: 1 / 13;
-  grid-row: 3;
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  padding: 0;
-  position: relative;
-}
-.card-portscanner .ps-left {
-  padding: 48px;
-  flex: 0 0 42%;
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-}
-.card-portscanner .ps-right {
-  padding: 48px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.card-portscanner .card-num {
-  font-size: 120px;
-}
-.card-portscanner .card-title {
-  font-size: clamp(40px, 4vw, 60px);
-}
-.card-portscanner .card-desc {
-  max-width: 520px;
-}
-
-/* new-release pulse badge */
-.card-new-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--green);
-  border: 1px solid rgba(0,255,135,0.25);
-  padding: 4px 10px;
-  margin-bottom: 20px;
-  width: fit-content;
-}
-.card-new-badge .new-dot {
-  width: 5px; height: 5px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-green 2s ease-in-out infinite;
-}
-
-/* ps tech grid on the right panel */
-.ps-tech-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  margin-top: auto;
-}
-.ps-tech-item {
-  padding: 16px;
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: background .25s, border-color .25s;
-}
-.card-portscanner:hover .ps-tech-item {
-  border-color: rgba(0,255,135,0.12);
-}
-.ps-tech-label {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.2);
-}
-.ps-tech-val {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: rgba(240,237,232,0.6);
-  transition: color .25s;
-}
-.card-portscanner:hover .ps-tech-val { color: rgba(0,255,135,0.75); }
-
-/* scan animation on hover */
-.ps-scan-line {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent 0%, var(--green) 50%, transparent 100%);
-  opacity: 0;
-  transform: translateY(0);
-  transition: opacity .3s;
-}
-.card-portscanner:hover .ps-scan-line {
-  opacity: 0.5;
-  animation: scan-sweep 2s linear infinite;
-}
-@keyframes scan-sweep {
-  from { transform: translateY(0); }
-  to   { transform: translateY(var(--card-h, 300px)); }
-}
-
-#projects {
-  padding: 120px 48px;
-  border-top: 1px solid var(--border);
-}
-.projects-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.project-row-wrapper {
-  border-bottom: 1px solid var(--border);
-}
-.project-row-wrapper .project-row {
-  border-bottom: none;
-}
-
-.project-row {
-  display: grid;
-  grid-template-columns: 80px 1fr auto auto;
-  align-items: center;
-  gap: 48px;
-  padding: 36px 0;
-  border-bottom: 1px solid var(--border);
-  text-decoration: none;
-  cursor: none;
-  position: relative;
-  overflow: hidden;
-  transition: padding-left .35s ease;
-}
-.project-row::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--green);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform .35s ease;
-}
-.project-row:hover::before { transform: scaleY(1); }
-.project-row:hover { padding-left: 20px; }
-.project-row:hover .proj-num   { color: var(--green); }
-.project-row:hover .proj-title { color: var(--white); }
-.project-row:hover .proj-arrow { background: var(--green); color: var(--black); }
-
-.proj-num {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: rgba(240,237,232,0.2);
-  letter-spacing: .1em;
-  transition: color .35s;
-  flex-shrink: 0;
-}
-.proj-info { display: flex; flex-direction: column; gap: 6px; }
-.proj-category {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.25);
-}
-.proj-title {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 38px);
-  letter-spacing: .02em;
-  color: rgba(240,237,232,0.75);
-  transition: color .35s;
-}
-.proj-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-.proj-year {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: rgba(240,237,232,0.2);
-  letter-spacing: .1em;
-}
-.proj-status {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  color: var(--green);
-  text-transform: uppercase;
-}
-.proj-arrow {
-  width: 44px; height: 44px;
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(240,237,232,0.3);
-  flex-shrink: 0;
-  transition: background .25s, color .25s, transform .35s;
-}
-.proj-arrow svg {
-  width: 16px; height: 16px;
-  transition: transform .35s ease;
-}
-
-.project-detail {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-.project-detail.open {
-  grid-template-rows: 1fr;
-}
-.detail-inner {
-  min-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s, padding 0.4s ease;
-  padding: 0 0 0 128px;
-}
-.project-detail.open .detail-inner {
-  padding: 40px 0 48px 128px;
-  opacity: 1;
-  transform: translateY(0);
-}
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 40px;
-}
-.detail-block {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.detail-tag {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--green);
-}
-.detail-text {
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: rgba(240,237,232,0.45);
-  max-width: 400px;
-}
-.detail-footer {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-}
-.detail-pill {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border: 1px solid rgba(0,255,135,0.2);
-  color: rgba(0,255,135,0.6);
-}
-
-.project-row-wrapper.expanded .proj-arrow {
-  background: var(--green);
-  color: var(--black);
-}
-.project-row-wrapper.expanded .proj-arrow svg {
-  transform: rotate(180deg);
-}
-
-#toolkit {
-  padding: 120px 48px;
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
-}
-.toolkit-left h3 {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 64px);
-  line-height: 1.05;
-  color: var(--white);
-  margin-bottom: 32px;
-}
-.toolkit-left p {
-  font-size: 14px;
-  line-height: 1.8;
-  color: rgba(240,237,232,0.4);
-  max-width: 360px;
-  margin-bottom: 48px;
-}
-.skill-bars { display: flex; flex-direction: column; gap: 20px; }
-.skill-bar-item { display: flex; flex-direction: column; gap: 8px; }
-.skill-bar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.skill-bar-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.5);
-}
-.skill-bar-pct {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--green);
-}
-.skill-bar-track {
-  height: 2px;
-  background: var(--grey);
-  position: relative;
-  overflow: hidden;
-}
-.skill-bar-fill {
-  position: absolute;
-  top: 0; left: 0; bottom: 0;
-  background: var(--green);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.skill-bar-fill.animated { transform: scaleX(1); }
-.toolkit-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-}
-.tool-item {
-  padding: 24px 20px;
-  background: var(--grey-d);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: background .25s, border-color .25s;
-  cursor: none;
-}
-.tool-item:hover {
-  background: rgba(0,255,135,0.04);
-  border-color: rgba(0,255,135,0.15);
-}
-.tool-item:hover .tool-name { color: var(--green); }
-.tool-cat {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.2);
-}
-.tool-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: rgba(240,237,232,0.7);
-  transition: color .25s;
-}
-
-#contact {
-  padding: 120px 48px 80px;
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
-}
-.contact-left {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-.contact-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  width: fit-content;
-}
-.contact-badge span {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--green);
-}
-.contact-heading {
-  font-family: var(--font-display);
-  font-size: clamp(60px, 9vw, 130px);
-  line-height: .92;
-  letter-spacing: .01em;
-  color: var(--white);
-}
-.contact-heading .hollow {
-  -webkit-text-stroke: 1px rgba(240,237,232,0.2);
-  color: transparent;
-}
-.contact-desc {
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: rgba(240,237,232,0.4);
-  max-width: 420px;
-}
-.contact-email {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: rgba(240,237,232,0.35);
-  text-decoration: none;
-  letter-spacing: .05em;
-  transition: color .25s;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border);
-  display: inline-block;
-}
-.contact-email:hover { color: var(--green); border-bottom-color: var(--green); }
-
-.contact-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 40px;
-}
-.contact-right .section-subtitle {
-  align-self: flex-start;
-  max-width: 220px;
-  color: rgba(240,237,232,0.35);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: .03em;
-  line-height: 1.7;
-}
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.contact-link-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
-  text-decoration: none;
-  cursor: none;
-  transition: padding-left .3s;
-}
-.contact-link-item:hover { padding-left: 16px; }
-.contact-link-item:hover .link-label { color: var(--white); }
-.contact-link-item:hover .link-arrow { color: var(--green); transform: rotate(-45deg); }
-.link-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(240,237,232,0.35);
-  transition: color .25s;
-}
-.link-arrow {
-  color: rgba(240,237,232,0.15);
-  transition: color .25s, transform .35s;
-}
-.link-arrow svg { width: 16px; height: 16px; }
-
-footer {
-  padding: 32px 48px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.footer-copy {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .15em;
-  color: rgba(240,237,232,0.15);
-  text-transform: uppercase;
-}
-.footer-version {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  color: rgba(0,255,135,0.3);
-  text-transform: uppercase;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity .9s cubic-bezier(0.16, 1, 0.3, 1),
-              transform .9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: .1s; }
-.reveal-delay-2 { transition-delay: .2s; }
-.reveal-delay-3 { transition-delay: .3s; }
-.reveal-delay-4 { transition-delay: .4s; }
-
-@media (max-width: 900px) {
-  nav { padding: 20px 24px; }
-  nav::after { left: 24px; right: 24px; }
-  .nav-links { display: none; }
-  #hero { padding: 0 24px 40px; padding-top: 100px; }
-  .hero-sub { grid-template-columns: 1fr; gap: 32px; }
-  .hero-cta { justify-content: flex-start; }
-  .scroll-indicator { display: none; }
-  #Projetos, #projects, #contact, #toolkit { padding: 80px 24px; }
-  .bento-grid { grid-template-columns: 1fr; }
-  .card-offense, .card-defense, .card-intel, .card-forensics, .card-cloud, .card-portscanner {
-    grid-column: 1; grid-row: auto;
-  }
-  .card-portscanner {
-    flex-direction: column;
-  }
-  .card-portscanner .ps-left {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    flex: none;
-  }
-  .ps-tech-grid { grid-template-columns: repeat(2, 1fr); }
-  .section-title { padding: 0 24px; }
-  #toolkit { grid-template-columns: 1fr; }
-  .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
-  #contact { grid-template-columns: 1fr; }
-  footer { flex-direction: column; gap: 12px; text-align: center; }
-  body { cursor: auto; }
-  #cursor, #cursor-ring { display: none; }
-  .project-row { grid-template-columns: 48px 1fr auto; gap: 16px; }
-  .proj-meta { display: none; }
-  .detail-inner,
-  .project-detail.open .detail-inner { padding-left: 0; }
-  .detail-grid { grid-template-columns: 1fr; gap: 32px; }
-}
-
-#preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background: #060608;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: all;
-}
-#preloader::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: .035;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
-}
-.preloader-inner {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity .7s cubic-bezier(0.16,1,0.3,1),
-              transform .7s cubic-bezier(0.16,1,0.3,1);
-}
-.preloader-inner.visible { opacity: 1; transform: translateY(0); }
-.preloader-inner.hidden {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity .55s ease-in, transform .55s ease-in;
-}
-.preloader-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(64px, 12vw, 140px);
-  line-height: 1;
-  letter-spacing: .04em;
-  color: #00ff87;
-  text-shadow: 0 0 60px rgba(0,255,135,0.18);
-}
-.preloader-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 12px;
-}
-.preloader-meta span {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(9px, 1.2vw, 12px);
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(0,255,135,0.5);
-  line-height: 1.4;
-}
-#preloader-bar {
-  position: absolute;
-  bottom: 0; left: 0;
-  height: 2px;
-  width: 0%;
-  background: #00ff87;
-  transition: width 2s cubic-bezier(0.16,1,0.3,1);
-}
-#preloader.fade-out {
-  opacity: 0;
-  transition: opacity .6s ease-in;
-  pointer-events: none;
-}
+#toolkit { padding:120px 48px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.toolkit-left h3 { font-family:var(--font-display); font-size:clamp(36px,4vw,64px); line-height:1.05; color:var(--white); margin-bottom:32px; }
+.toolkit-left p { font-size:14px; line-height:1.8; color:rgba(240,237,232,0.4); max-width:360px; margin-bottom:48px; }
+.skill-bars { display:flex; flex-direction:column; gap:20px; }
+.skill-bar-item { display:flex; flex-direction:column; gap:8px; }
+.skill-bar-header { display:flex; justify-content:space-between; align-items:center; }
+.skill-bar-label { font-family:var(--font-mono); font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:rgba(240,237,232,0.5); }
+.skill-bar-pct { font-family:var(--font-mono); font-size:10px; color:var(--green); }
+.skill-bar-track { height:2px; background:var(--grey); position:relative; overflow:hidden; }
+.skill-bar-fill { position:absolute; top:0; left:0; bottom:0; background:var(--green); transform-origin:left; transform:scaleX(0); transition:transform 1.2s cubic-bezier(0.16,1,0.3,1); }
+.skill-bar-fill.animated { transform:scaleX(1); }
+.toolkit-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.tool-item { padding:24px 20px; background:var(--grey-d); border:1px solid var(--border); display:flex; flex-direction:column; gap:8px; transition:background .25s,border-color .25s; cursor:none; }
+.tool-item:hover { background:rgba(0,255,135,0.04); border-color:rgba(0,255,135,0.15); }
+.tool-item:hover .tool-name { color:var(--green); }
+.tool-cat { font-family:var(--font-mono); font-size:8px; letter-spacing:.15em; text-transform:uppercase; color:rgba(240,237,232,0.2); }
+.tool-name { font-family:var(--font-mono); font-size:12px; color:rgba(240,237,232,0.7); transition:color .25s; }
+#contact { padding:120px 48px 80px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-left { display:flex; flex-direction:column; gap:32px; }
+.contact-badge { display:inline-flex; align-items:center; gap:10px; width:fit-content; }
+.contact-badge span { font-family:var(--font-mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--green); }
+.contact-heading { font-family:var(--font-display); font-size:clamp(60px,9vw,130px); line-height:.92; letter-spacing:.01em; color:var(--white); }
+.contact-desc { font-size:13.5px; line-height:1.8; color:rgba(240,237,232,0.4); max-width:420px; }
+.contact-email { font-family:var(--font-mono); font-size:14px; color:rgba(240,237,232,0.35); text-decoration:none; letter-spacing:.05em; transition:color .25s; padding-bottom:4px; border-bottom:1px solid var(--border); display:inline-block; }
+.contact-email:hover { color:var(--green); border-bottom-color:var(--green); }
+.contact-right { display:flex; flex-direction:column; justify-content:flex-start; gap:40px; }
+.contact-links { display:flex; flex-direction:column; gap:0; }
+.contact-link-item { display:flex; align-items:center; justify-content:space-between; padding:20px 0; border-bottom:1px solid var(--border); text-decoration:none; cursor:none; transition:padding-left .3s; }
+.contact-link-item:hover { padding-left:16px; }
+.contact-link-item:hover .link-label { color:var(--white); }
+.contact-link-item:hover .link-arrow { color:var(--green); transform:rotate(-45deg); }
+.link-label { font-family:var(--font-mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:rgba(240,237,232,0.35); transition:color .25s; }
+.link-arrow { color:rgba(240,237,232,0.15); transition:color .25s,transform .35s; }
+.link-arrow svg { width:16px; height:16px; }
+footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.footer-copy { font-family:var(--font-mono); font-size:9px; letter-spacing:.15em; color:rgba(240,237,232,0.15); text-transform:uppercase; }
+.footer-version { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; color:rgba(0,255,135,0.3); text-transform:uppercase; }
+.reveal { opacity:0; transform:translateY(32px); transition:opacity .9s cubic-bezier(0.16,1,0.3,1),transform .9s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1{transition-delay:.1s} .reveal-delay-2{transition-delay:.2s} .reveal-delay-3{transition-delay:.3s}
+@media(max-width:900px){
+  nav{padding:20px 24px} nav::after{left:24px;right:24px} .nav-links{display:none}
+  #hero{padding:0 24px 40px;padding-top:100px} .hero-sub{grid-template-columns:1fr;gap:32px}
+  .hero-cta{justify-content:flex-start} .scroll-indicator{display:none}
+  #Projetos,#experience,#contact,#toolkit{padding:80px 24px}
+  .bento-grid{grid-template-columns:1fr}
+  .card-offense,.card-defense,.card-intel,.card-forensics,.card-cloud,.card-portscanner{grid-column:1;grid-row:auto}
+  .card-portscanner{flex-direction:column} .card-portscanner .ps-left{border-right:none;border-bottom:1px solid var(--border);flex:none}
+  .ps-tech-grid{grid-template-columns:repeat(2,1fr)} .section-title{padding:0 24px}
+  #toolkit{grid-template-columns:1fr} .toolkit-grid{grid-template-columns:repeat(2,1fr)}
+  #contact{grid-template-columns:1fr} footer{flex-direction:column;gap:12px;text-align:center}
+  body{cursor:auto} #cursor,#cursor-ring{display:none}
+  .exp-row{grid-template-columns:48px 1fr;gap:16px} .exp-logo{display:none}
+}
+#preloader { position:fixed; inset:0; z-index:10000; background:#060608; display:flex; align-items:center; justify-content:center; pointer-events:all; }
+#preloader::before { content:''; position:absolute; inset:0; opacity:.035; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:200px; }
+.preloader-inner { display:flex; align-items:flex-start; gap:20px; opacity:0; transform:translateY(10px); transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1); }
+.preloader-inner.visible{opacity:1;transform:translateY(0)} .preloader-inner.hidden{opacity:0;transform:translateY(-10px);transition:opacity .55s ease-in,transform .55s ease-in}
+.preloader-name { font-family:'Bebas Neue',sans-serif; font-size:clamp(64px,12vw,140px); line-height:1; letter-spacing:.04em; color:#00ff87; text-shadow:0 0 60px rgba(0,255,135,0.18); }
+.preloader-meta { display:flex; flex-direction:column; gap:4px; padding-top:12px; }
+.preloader-meta span { font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1.2vw,12px); letter-spacing:.22em; text-transform:uppercase; color:rgba(0,255,135,0.5); line-height:1.4; }
+#preloader-bar { position:absolute; bottom:0; left:0; height:2px; width:0%; background:#00ff87; transition:width 2s cubic-bezier(0.16,1,0.3,1); }
+#preloader.fade-out { opacity:0; transition:opacity .6s ease-in; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -1163,10 +228,7 @@ footer {
 <div id="preloader">
   <div class="preloader-inner" id="preloader-inner">
     <span class="preloader-name">LIRA</span>
-    <div class="preloader-meta">
-      <span>Portfolio</span>
-      <span>© 2026</span>
-    </div>
+    <div class="preloader-meta"><span>Portfolio</span><span>© 2026</span></div>
   </div>
   <div id="preloader-bar"></div>
 </div>
@@ -1175,86 +237,67 @@ footer {
 <div id="cursor-ring"></div>
 
 <nav>
-  <a href="#" class="nav-logo"> Gabriel // 2026</a>
+  <a href="#" class="nav-logo">Gabriel // 2026</a>
   <ul class="nav-links">
-    <li><a href="#projects">Projetos</a></li>
-    <li><a href="#freelance">Freelance</a></li>
+    <li><a href="#Projetos">Projetos</a></li>
+    <li><a href="#experience">Experiência</a></li>
     <li><a href="#toolkit">Toolkit</a></li>
     <li><a href="#contact">Contato</a></li>
   </ul>
-  <div class="nav-status">
-    <div class="status-dot"></div>
-    Portfolio
-  </div>
+  <div class="nav-status"><div class="status-dot"></div>Portfolio</div>
 </nav>
 
 <section id="hero">
   <div class="hero-main">
     <div class="hero-eyebrow reveal">
       <div class="hero-eyebrow-line"></div>
-      <span>Analista de Detecção &amp; Resposta a Incidentes</span>
+      <span>SOC Analyst · Detecção &amp; Resposta a Incidentes</span>
     </div>
-
-    <h1 class="hero-title reveal reveal-delay-1">
-      Liragbr<br/>
-    </h1>
-
+    <h1 class="hero-title reveal reveal-delay-1">Liragbr</h1>
     <div class="hero-sub">
       <p class="hero-desc reveal reveal-delay-2">
-        Profissional em formação em <strong class="highlight-green">Cibersegurança</strong>, com foco em
-        operações defensivas, análise de incidentes e simulação
-        de adversários. Experiência construída via laboratório,
-        projetos técnicos publicados e certificações práticas em
-       SIEM, Threat Intelligence e Incident Response.
+        Profissional de <strong class="highlight-green">Cibersegurança</strong> com foco em
+        operações defensivas, detecção de ameaças e resposta a incidentes.
+        Experiência em ambiente SOC real utilizando NDR, EDR e ITSM,
+        com projetos técnicos publicados e certificações em SIEM,
+        Threat Intelligence e Incident Response.
       </p>
       <div class="hero-cta reveal reveal-delay-3">
-        <span class="btn-ghost disabled">
-          Ver Currículo
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </span>
         <a href="https://drive.google.com/file/d/1jZFkLYBPc9mhG1sKjHyG-kWoQkeWE2oy/preview"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-primary">
+           target="_blank" rel="noopener noreferrer" class="btn-primary">
           Meu Currículo
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
       </div>
     </div>
   </div>
-
   <div class="hero-bg-num">01</div>
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
+  <div class="scroll-indicator"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
 <div id="ticker">
   <div class="ticker-track">
-  <div class="ticker-item"><span class="ticker-label">SIEM</span><span class="ticker-value">Wazuh</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Linux</span></div>
-  <div class="ticker-item"><span class="ticker-label">Logs</span><span class="ticker-value">ELK Stack</span></div>
-  <div class="ticker-item"><span class="ticker-label">Network</span><span class="ticker-value">Wireshark</span></div>
-  <div class="ticker-item"><span class="ticker-label">EDR</span><span class="ticker-value">Simulação</span></div>
-  <div class="ticker-item"><span class="ticker-label">Offensive</span><span class="ticker-value">Nmap</span></div>
-  <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Parrot</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
-  <!-- duplicata para loop infinito -->
-  <div class="ticker-item"><span class="ticker-label">SIEM</span><span class="ticker-value">Wazuh</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Linux</span></div>
-  <div class="ticker-item"><span class="ticker-label">Logs</span><span class="ticker-value">ELK Stack</span></div>
-  <div class="ticker-item"><span class="ticker-label">Network</span><span class="ticker-value">Wireshark</span></div>
-  <div class="ticker-item"><span class="ticker-label">EDR</span><span class="ticker-value">Simulação</span></div>
-  <div class="ticker-item"><span class="ticker-label">Offensive</span><span class="ticker-value">Nmap</span></div>
-  <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Parrot</span></div>
-  <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
+    <div class="ticker-item"><span class="ticker-label">NDR</span><span class="ticker-value">Darktrace</span></div>
+    <div class="ticker-item"><span class="ticker-label">EDR</span><span class="ticker-value">CrowdStrike</span></div>
+    <div class="ticker-item"><span class="ticker-label">ITSM</span><span class="ticker-value">DeskManager</span></div>
+    <div class="ticker-item"><span class="ticker-label">SIEM</span><span class="ticker-value">Wazuh</span></div>
+    <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Linux</span></div>
+    <div class="ticker-item"><span class="ticker-label">Network</span><span class="ticker-value">Wireshark</span></div>
+    <div class="ticker-item"><span class="ticker-label">Framework</span><span class="ticker-value">MITRE ATT&CK</span></div>
+    <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
+    <div class="ticker-item"><span class="ticker-label">Offensive</span><span class="ticker-value">Nmap</span></div>
+    <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
+    <!-- duplicate for infinite loop -->
+    <div class="ticker-item"><span class="ticker-label">NDR</span><span class="ticker-value">Darktrace</span></div>
+    <div class="ticker-item"><span class="ticker-label">EDR</span><span class="ticker-value">CrowdStrike</span></div>
+    <div class="ticker-item"><span class="ticker-label">ITSM</span><span class="ticker-value">DeskManager</span></div>
+    <div class="ticker-item"><span class="ticker-label">SIEM</span><span class="ticker-value">Wazuh</span></div>
+    <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Linux</span></div>
+    <div class="ticker-item"><span class="ticker-label">Network</span><span class="ticker-value">Wireshark</span></div>
+    <div class="ticker-item"><span class="ticker-label">Framework</span><span class="ticker-value">MITRE ATT&CK</span></div>
+    <div class="ticker-item"><span class="ticker-label">Scripting</span><span class="ticker-value">Python / Bash</span></div>
+    <div class="ticker-item"><span class="ticker-label">Offensive</span><span class="ticker-value">Nmap</span></div>
+    <div class="ticker-item"><span class="ticker-label">OS</span><span class="ticker-value">Kali</span></div>
   </div>
 </div>
 
@@ -1263,114 +306,51 @@ footer {
     <span class="section-num reveal">02</span>
     <h2 class="section-title reveal reveal-delay-1">Meus<br/>Projetos</h2>
   </div>
-
   <div class="bento-grid">
-
-    <!-- ROW 1 -->
     <a href="https://github.com/Liragbr/GhostRunner" target="_blank" rel="noopener noreferrer" class="bento-card card-offense reveal">
-      <div class="card-glow"></div>
-      <div class="card-num">01</div>
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
-      </svg>
+      <div class="card-glow"></div><div class="card-num">01</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
       <span class="card-tag">C2 INFRASTRUCTURE</span>
       <h3 class="card-title">GhostRunner<br/>C2 Agent</h3>
       <p class="card-desc">Agente C2 com comunicação cifrada via TLS 1.3, autenticação HMAC-SHA256 e allowlist de execução. Defense-in-Depth aplicado no protocolo.</p>
-      <div class="card-badges">
-        <span class="badge">PYTHON</span>
-        <span class="badge">TLS 1.3</span>
-        <span class="badge">HMAC-SHA256</span>
-        <span class="badge">RED TEAMING</span>
-      </div>
+      <div class="card-badges"><span class="badge">PYTHON</span><span class="badge">TLS 1.3</span><span class="badge">HMAC-SHA256</span><span class="badge">RED TEAMING</span></div>
     </a>
-
     <a href="https://github.com/Liragbr/InputOptimizer" target="_blank" rel="noopener noreferrer" class="bento-card card-defense reveal reveal-delay-1">
-      <div class="card-glow"></div>
-      <div class="card-num">02</div>
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
+      <div class="card-glow"></div><div class="card-num">02</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       <span class="card-tag">LATENCY OPTIMIZATION</span>
       <h3 class="card-title">Input Optimizer<br/>Latency</h3>
       <p class="card-desc">Kit de ferramentas em C e Batch para diagnóstico e mitigação de input lag no Windows via ajuste de timer resolution e gestão de cache de memória.</p>
-      <div class="card-badges">
-        <span class="badge">C</span>
-        <span class="badge">KERNEL-LEVEL</span>
-        <span class="badge">PERFORMANCE TUNING</span>
-        <span class="badge">DIAGNOSTICS</span>
-      </div>
+      <div class="card-badges"><span class="badge">C</span><span class="badge">KERNEL-LEVEL</span><span class="badge">PERFORMANCE TUNING</span></div>
     </a>
-
-    <!-- ROW 2 -->
     <a href="https://github.com/Liragbr/IPAdress" target="_blank" rel="noopener noreferrer" class="bento-card card-intel reveal">
-      <div class="card-glow"></div>
-      <div class="card-num">03</div>
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 1 0 10 10"/>
-        <path d="M12 8v-2m0 12v-2M8 12H6m12 0h-2"/>
-      </svg>
+      <div class="card-glow"></div><div class="card-num">03</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v-2m0 12v-2M8 12H6m12 0h-2"/></svg>
       <span class="card-tag">ASYNCHRONOUS TOOL</span>
       <h3 class="card-title">Geolocate<br/>IP Intelligence</h3>
-      <p class="card-desc">CLI tool para geolocalização e enriquecimento de IPs com arquitetura modular e tratamento estruturado de exceções. Resolução IPv4/IPv6 via integração de API.</p>
-      <div class="card-badges">
-        <span class="badge">PYTHON</span>
-        <span class="badge">API INTEGRATION</span>
-        <span class="badge">THREAT HUNTING</span>
-        <span class="badge">AUTOMATION</span>
-      </div>
+      <p class="card-desc">CLI tool para geolocalização e enriquecimento de IPs com arquitetura modular. Resolução IPv4/IPv6 via integração de API externa.</p>
+      <div class="card-badges"><span class="badge">PYTHON</span><span class="badge">API INTEGRATION</span><span class="badge">THREAT HUNTING</span></div>
     </a>
-
     <a href="https://github.com/Liragbr/WebRTC" target="_blank" rel="noopener noreferrer" class="bento-card card-forensics reveal reveal-delay-1">
-      <div class="card-glow"></div>
-      <div class="card-num">04</div>
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
+      <div class="card-glow"></div><div class="card-num">04</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span class="card-tag">PRIVACY & NETWORK ANALYSIS</span>
       <h3 class="card-title">WebRTC STUN<br/>IP Analyzer</h3>
-      <p class="card-desc">PoC para detecção de vazamento de IP via WebRTC/STUN. Intercepta Binding Responses em tempo real com TShark e mapeia peers via geolocalização com cache local.</p>
-      <div class="card-badges">
-        <span class="badge">PYTHON</span>
-        <span class="badge">TSHARK</span>
-        <span class="badge">OSINT</span>
-        <span class="badge">NETWORK ANALYSIS</span>
-      </div>
+      <p class="card-desc">PoC para detecção de vazamento de IP via WebRTC/STUN. Intercepta Binding Responses em tempo real com TShark e mapeia peers via geolocalização.</p>
+      <div class="card-badges"><span class="badge">PYTHON</span><span class="badge">TSHARK</span><span class="badge">OSINT</span><span class="badge">NETWORK ANALYSIS</span></div>
     </a>
-
     <a href="https://github.com/Liragbr/Recon1.0.v" target="_blank" rel="noopener noreferrer" class="bento-card card-cloud reveal reveal-delay-2">
-      <div class="card-glow"></div>
-      <div class="card-num">05</div>
-      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
+      <div class="card-glow"></div><div class="card-num">05</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       <span class="card-tag">INFRASTRUCTURE MAPPING</span>
       <h3 class="card-title">Recon 1.0.v<br/>Security</h3>
-      <p class="card-desc">Framework assíncrono de OSINT e mapeamento de superfície de ataque. Enumeração de subdomínios via CT logs, DNS híbrido e port scanning com relatório HTML interativo.</p>
-      <div class="card-badges">
-        <span class="badge">PYTHON 3.11</span>
-        <span class="badge">ASYNCIO</span>
-        <span class="badge">OSINT</span>
-        <span class="badge">RED TEAMING</span>
-      </div>
+      <p class="card-desc">Framework assíncrono de OSINT e mapeamento de superfície de ataque. Enumeração de subdomínios via CT logs, DNS híbrido e port scanning.</p>
+      <div class="card-badges"><span class="badge">PYTHON 3.11</span><span class="badge">ASYNCIO</span><span class="badge">OSINT</span><span class="badge">RED TEAMING</span></div>
     </a>
-
-    <!-- ROW 3 — PORT SCANNER (featured, full-width, horizontal) -->
-    <a href="https://github.com/Liragbr/PortScanner"
-       target="_blank"
-       rel="noopener noreferrer"
-       class="bento-card card-portscanner reveal reveal-delay-1"
-       id="ps-card">
-      <div class="card-glow"></div>
-      <div class="ps-scan-line"></div>
-      <div class="card-num">06</div>
-
-      <!-- esquerda: identidade do projeto -->
+    <a href="https://github.com/Liragbr/PortScanner" target="_blank" rel="noopener noreferrer" class="bento-card card-portscanner reveal reveal-delay-1" id="ps-card">
+      <div class="card-glow"></div><div class="ps-scan-line"></div><div class="card-num">06</div>
       <div class="ps-left">
-        <div class="card-new-badge">
-          <span class="new-dot"></span>
-          Novo — v1.0.0
-        </div>
-        <!-- ícone: ondas de radar / scan -->
+        <div class="card-new-badge"><span class="new-dot"></span>Novo — v1.0.0</div>
         <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
           <circle cx="12" cy="12" r="1.5"/>
           <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" stroke-opacity=".25"/>
@@ -1380,198 +360,137 @@ footer {
         </svg>
         <span class="card-tag">PORT SCANNING / NETWORK RECON</span>
         <h3 class="card-title">Port Scanner<br/>Async Engine</h3>
-        <div class="card-badges">
-          <span class="badge">PYTHON</span>
-          <span class="badge">ASYNCIO</span>
-          <span class="badge">SCAPY</span>
-          <span class="badge">SYN STEALTH</span>
-          <span class="badge">RICH TUI</span>
-          <span class="badge">PYINSTALLER</span>
-        </div>
+        <div class="card-badges"><span class="badge">PYTHON</span><span class="badge">ASYNCIO</span><span class="badge">SCAPY</span><span class="badge">SYN STEALTH</span><span class="badge">RICH TUI</span></div>
       </div>
-
-      <!-- direita: descrição técnica + tech grid -->
       <div class="ps-right">
-        <div>
-          <p class="card-desc">
-            Motor de varredura de portas TCP assíncrono construído com <strong style="color:rgba(240,237,232,0.75);font-weight:400">asyncio</strong> — centenas de portas escaneadas em paralelo sem overhead de threads. Implementa SYN scan half-open via <strong style="color:rgba(240,237,232,0.75);font-weight:400">Scapy</strong> para varredura stealth sem completar o handshake TCP, com dashboard TUI brutalista e exportação de relatórios JSON prontos para ingestão em SIEMs.
-          </p>
-        </div>
-
+        <p class="card-desc">Motor de varredura de portas TCP assíncrono construído com <strong style="color:rgba(240,237,232,0.75);font-weight:400">asyncio</strong> — centenas de portas escaneadas em paralelo. Implementa SYN scan half-open via <strong style="color:rgba(240,237,232,0.75);font-weight:400">Scapy</strong> para varredura stealth, com dashboard TUI e exportação JSON para ingestão em SIEMs.</p>
         <div class="ps-tech-grid">
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Motor</span>
-            <span class="ps-tech-val">asyncio</span>
-          </div>
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Stealth Mode</span>
-            <span class="ps-tech-val">SYN Half-Open</span>
-          </div>
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Interface</span>
-            <span class="ps-tech-val">Rich TUI</span>
-          </div>
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Output</span>
-            <span class="ps-tech-val">JSON / SIEM</span>
-          </div>
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Release</span>
-            <span class="ps-tech-val">v1.0.0 .exe</span>
-          </div>
-          <div class="ps-tech-item">
-            <span class="ps-tech-label">Linguagem</span>
-            <span class="ps-tech-val">Python 3.10+</span>
-          </div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Motor</span><span class="ps-tech-val">asyncio</span></div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Stealth Mode</span><span class="ps-tech-val">SYN Half-Open</span></div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Interface</span><span class="ps-tech-val">Rich TUI</span></div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Output</span><span class="ps-tech-val">JSON / SIEM</span></div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Release</span><span class="ps-tech-val">v1.0.0 .exe</span></div>
+          <div class="ps-tech-item"><span class="ps-tech-label">Linguagem</span><span class="ps-tech-val">Python 3.10+</span></div>
         </div>
       </div>
     </a>
-
-  </div><!-- /bento-grid -->
+  </div>
 </section>
 
-<section id="projects">
+<!-- ── EXPERIÊNCIA ── -->
+<section id="experience">
   <div class="section-header">
     <span class="section-num reveal">03</span>
-    <h2 class="section-title reveal reveal-delay-1">Freelance</h2>
-    <p class="section-subtitle reveal reveal-delay-2">
-      Missões reais. Resultados mensuráveis. Impacto em ambientes de produção.
-    </p>
+    <h2 class="section-title reveal reveal-delay-1">Experiência<br/>Profissional</h2>
+    <p class="section-subtitle reveal reveal-delay-2">Operações reais.<br/>Ambientes críticos.<br/>Impacto mensurável.</p>
   </div>
 
-  <div class="projects-list">
-    <div class="project-row-wrapper reveal">
-      <a href="#" class="project-row" onclick="toggleProject(event, 'detail-001')">
-        <span class="proj-num">001</span>
-        <div class="proj-info">
-          <span class="proj-category">Web Developer & Security Analyst</span>
-          <h3 class="proj-title">Clínica Misrael</h3>
-        </div>
-        <div class="proj-meta">
-          <span class="proj-year">2025</span>
-          <span class="proj-status">• Ativo</span>
-        </div>
-        <div class="proj-arrow">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M8 3v10M3 8l5 5 5-5"/>
-          </svg>
-        </div>
-      </a>
-
-      <div class="project-detail" id="detail-001">
-        <div class="detail-inner">
-          <div class="detail-grid">
-            <div class="detail-block">
-              <span class="detail-tag">01 — Desenvolvimento & Manutenção</span>
-              <p class="detail-text">
-                Atuação na manutenção e atualização de site institucional, com gerenciamento de conteúdo,
-                ajustes de navegação, padronização visual e melhorias de usabilidade. Trabalho realizado
-                com atenção à estabilidade da aplicação, organização do código e princípios básicos de
-                segurança no desenvolvimento web.
-              </p>
-            </div>
-            <div class="detail-block">
-              <span class="detail-tag">02 — Controles de Segurança</span>
-              <p class="detail-text">
-                Implementação de controles básicos de segurança no ambiente web, incluindo plugins de
-                mitigação de tráfego malicioso e tentativas automatizadas de acesso não autorizado,
-                ajustes de configuração para redução de riscos comuns em aplicações web e boas práticas
-                voltadas à disponibilidade e integridade do site.
-              </p>
-            </div>
-          </div>
-          <div class="detail-footer">
-            <span class="detail-pill">WordPress</span>
-            <span class="detail-pill">Web Security</span>
-            <span class="detail-pill">Hardening</span>
-            <span class="detail-pill">2025</span>
-          </div>
-        </div>
+  <div class="exp-row reveal">
+    <span class="exp-num">001</span>
+    <div class="exp-body">
+      <div class="exp-header">
+        <span class="exp-company">GarageTech</span>
+        <span class="exp-role-badge">SOC Analyst</span>
+      </div>
+      <div class="exp-meta">
+        <span class="exp-period">Jun 2026 — Present</span>
+        <span class="exp-location">Brasília, DF · Presencial</span>
+        <span class="exp-active-dot"><div class="status-dot"></div>Ativo</span>
+      </div>
+      <p class="exp-desc">
+        Atuação em operações de SOC com monitoramento contínuo de segurança utilizando
+        Darktrace para detecção de anomalias de rede (NDR), CrowdStrike Falcon para
+        proteção e resposta em endpoints (EDR), e DeskManager para gestão de incidentes
+        e cumprimento de SLAs. Análise de comportamentos suspeitos, triagem de alertas,
+        correlação de eventos e aplicação do framework MITRE ATT&amp;CK em cenários reais.
+        Resposta a incidentes seguindo NIST SP 800-61, com elaboração de relatórios
+        técnicos e documentação de evidências.
+      </p>
+      <div class="exp-stack">
+        <span class="exp-pill">Darktrace (NDR)</span>
+        <span class="exp-pill">CrowdStrike Falcon (EDR)</span>
+        <span class="exp-pill">DeskManager (ITSM)</span>
+        <span class="exp-pill">MITRE ATT&amp;CK</span>
+        <span class="exp-pill">NIST SP 800-61</span>
+        <span class="exp-pill">Incident Response</span>
+        <span class="exp-pill">Threat Detection</span>
       </div>
     </div>
-  </div>
+    <!-- GarageTech logo SVG in green -->
+    <div class="exp-logo">
+  <img src="garagetech-logo.png" alt="GarageTech" 
+       style="width:100%; height:auto; filter: brightness(0) saturate(100%) invert(68%) sepia(98%) saturate(400%) hue-rotate(100deg) brightness(110%);" />
+</div>  
 </section>
 
 <section id="toolkit">
   <div class="toolkit-left reveal">
     <h3>Arsenal<br/>Técnico</h3>
-    <p>Ferramentas e tecnologias aplicadas em laboratório, projetos práticos e ambiente acadêmico.</p>
-
+    <p>Ferramentas e tecnologias aplicadas em ambiente SOC real, laboratório e projetos práticos.</p>
     <div class="skill-bars">
       <div class="skill-bar-item">
-        <div class="skill-bar-header">
-          <span class="skill-bar-label">NETWORK ANALYSIS</span>
-          <span class="skill-bar-pct">85%</span>
-        </div>
-        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.72"></div></div>
+        <div class="skill-bar-header"><span class="skill-bar-label">SOC & INCIDENT RESPONSE</span><span class="skill-bar-pct">90%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.90"></div></div>
       </div>
       <div class="skill-bar-item">
-        <div class="skill-bar-header">
-          <span class="skill-bar-label">SOC & INCIDENT RESPONSE</span>
-          <span class="skill-bar-pct">90%</span>
-        </div>
-        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.68"></div></div>
+        <div class="skill-bar-header"><span class="skill-bar-label">NETWORK ANALYSIS</span><span class="skill-bar-pct">85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.85"></div></div>
       </div>
       <div class="skill-bar-item">
-        <div class="skill-bar-header">
-          <span class="skill-bar-label">THREAT INTELLIGENCE</span>
-          <span class="skill-bar-pct">85%</span>
-        </div>
-        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.65"></div></div>
+        <div class="skill-bar-header"><span class="skill-bar-label">THREAT INTELLIGENCE</span><span class="skill-bar-pct">80%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.80"></div></div>
       </div>
       <div class="skill-bar-item">
-        <div class="skill-bar-header">
-          <span class="skill-bar-label">PENETRATION TESTING</span>
-          <span class="skill-bar-pct">75%</span>
-        </div>
-        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.60"></div></div>
+        <div class="skill-bar-header"><span class="skill-bar-label">PENETRATION TESTING</span><span class="skill-bar-pct">75%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="0.75"></div></div>
       </div>
     </div>
   </div>
-
   <div class="toolkit-grid reveal reveal-delay-1">
-    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Metasploit</span></div>
-    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Burp Suite</span></div>
-    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Nmap</span></div>
+    <!-- SOC Real (novas ferramentas) -->
+    <div class="tool-item"><span class="tool-cat">NDR</span><span class="tool-name">Darktrace</span></div>
+    <div class="tool-item"><span class="tool-cat">EDR</span><span class="tool-name">CrowdStrike Falcon</span></div>
+    <div class="tool-item"><span class="tool-cat">ITSM</span><span class="tool-name">DeskManager</span></div>
+    <!-- SIEM -->
     <div class="tool-item"><span class="tool-cat">SIEM</span><span class="tool-name">Splunk</span></div>
     <div class="tool-item"><span class="tool-cat">SIEM</span><span class="tool-name">Wazuh</span></div>
     <div class="tool-item"><span class="tool-cat">SIEM</span><span class="tool-name">Sentinel</span></div>
-    <div class="tool-item"><span class="tool-cat">Intel</span><span class="tool-name">MITRE ATT&CK</span></div>
+    <!-- Intel & Framework -->
+    <div class="tool-item"><span class="tool-cat">Framework</span><span class="tool-name">MITRE ATT&CK</span></div>
+    <div class="tool-item"><span class="tool-cat">Framework</span><span class="tool-name">NIST SP 800-61</span></div>
+    <div class="tool-item"><span class="tool-cat">Intel</span><span class="tool-name">Threat Hunting</span></div>
+    <!-- Offensive -->
+    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Metasploit</span></div>
+    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Burp Suite</span></div>
+    <div class="tool-item"><span class="tool-cat">Offensive</span><span class="tool-name">Nmap</span></div>
+    <!-- Forensic -->
+    <div class="tool-item"><span class="tool-cat">Forensic</span><span class="tool-name">Wireshark</span></div>
     <div class="tool-item"><span class="tool-cat">Forensic</span><span class="tool-name">Volatility</span></div>
     <div class="tool-item"><span class="tool-cat">Forensic</span><span class="tool-name">Autopsy</span></div>
-    <div class="tool-item"><span class="tool-cat">Forensic</span><span class="tool-name">Wireshark</span></div>
+    <!-- Network -->
     <div class="tool-item"><span class="tool-cat">Network</span><span class="tool-name">TShark</span></div>
-    <div class="tool-item"><span class="tool-cat">Code</span><span class="tool-name">C / Batch</span></div>
+    <div class="tool-item"><span class="tool-cat">Protocol</span><span class="tool-name">TLS 1.3</span></div>
+    <!-- Code -->
     <div class="tool-item"><span class="tool-cat">Code</span><span class="tool-name">Python</span></div>
     <div class="tool-item"><span class="tool-cat">Code</span><span class="tool-name">C#</span></div>
-    <div class="tool-item"><span class="tool-cat">Protocol</span><span class="tool-name">TLS 1.3</span></div>
+    <div class="tool-item"><span class="tool-cat">Code</span><span class="tool-name">C / Batch</span></div>
+    <div class="tool-item"><span class="tool-cat">Protocol</span><span class="tool-name">HMAC-SHA256</span></div>
   </div>
 </section>
 
 <section id="contact">
   <div class="contact-left">
-    <div class="contact-badge reveal">
-      <div class="status-dot"></div>
-      <span>Disponível para projetos</span>
-    </div>
-
-    <h2 class="contact-heading reveal reveal-delay-1">
-      CONTATE-me<br/>
-    </h2>
-
+    <div class="contact-badge reveal"><div class="status-dot"></div><span>Aberto a novas conexões</span></div>
+    <h2 class="contact-heading reveal reveal-delay-1">CONTATE<br/>-me</h2>
     <p class="contact-desc reveal reveal-delay-2">
-      Atualmente em busca de oportunidades para aprender, contribuir e crescer.
-      Se acha que me encaixo na sua equipe ou quer trocar uma ideia, fique à vontade -
-      responderei assim que possível.
+      Profissional de cibersegurança em constante evolução. Se quiser trocar uma ideia,
+      colaborar em projetos ou discutir sobre segurança ofensiva e defensiva,
+      fique à vontade — responderei assim que possível.
     </p>
-
-    <a href="mailto:Liraadev@gmail.com" class="contact-email reveal reveal-delay-3">
-      Liraadev@gmail.com
-    </a>
+    <a href="mailto:Liraadev@gmail.com" class="contact-email reveal reveal-delay-3">Liraadev@gmail.com</a>
   </div>
-
   <div class="contact-right reveal reveal-delay-2">
-  <br>
+    <br/>
     <div class="contact-links">
       <a href="https://www.linkedin.com/in/Liragbr" target="_blank" rel="noopener noreferrer" class="contact-link-item">
         <span class="link-label">LinkedIn</span>
@@ -1587,123 +506,30 @@ footer {
 
 <footer>
   <span class="footer-copy">© 2026 Gabriel Lira — All Rights Reserved</span>
-  <span class="footer-version">v1.0.0 — Classified</span>
+  <span class="footer-version">v2.0.0 — Classified</span>
 </footer>
 
 <script>
-const cursor = document.getElementById('cursor');
-const ring   = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top  = my + 'px';
-});
-
-function animateRing() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px';
-  ring.style.top  = ry + 'px';
-  requestAnimationFrame(animateRing);
-}
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+function animateRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing);}
 animateRing();
-
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-revealEls.forEach(el => io.observe(el));
-
-const barEls = document.querySelectorAll('.skill-bar-fill');
-const barObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const w = parseFloat(e.target.dataset.width);
-      e.target.style.transform = `scaleX(${w})`;
-      e.target.classList.add('animated');
-      barObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
-barEls.forEach(el => barObs.observe(el));
-
-const nav = document.querySelector('nav');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 80) {
-    nav.style.background = 'rgba(6,6,8,0.9)';
-    nav.style.backdropFilter = 'blur(24px)';
-  } else {
-    nav.style.background = 'transparent';
-    nav.style.backdropFilter = 'none';
-  }
-});
-
-document.querySelectorAll('.btn-primary, .btn-ghost').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const r = btn.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2);
-    const dy = e.clientY - (r.top  + r.height / 2);
-    btn.style.transform = `translate(${dx * 0.15}px, ${dy * 0.15}px)`;
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = '';
-  });
-});
-
-function toggleProject(e, detailId) {
-  e.preventDefault();
-  const detail  = document.getElementById(detailId);
-  const wrapper = detail.closest('.project-row-wrapper');
-  const isOpen  = detail.classList.contains('open');
-
-  document.querySelectorAll('.project-detail.open').forEach(d => {
-    d.classList.remove('open');
-    d.closest('.project-row-wrapper').classList.remove('expanded');
-  });
-
-  if (!isOpen) {
-    detail.classList.add('open');
-    wrapper.classList.add('expanded');
-  }
-}
-
-// ajusta a altura do card para a animação de scan
-const psCard = document.getElementById('ps-card');
-if (psCard) {
-  const ro = new ResizeObserver(() => {
-    psCard.style.setProperty('--card-h', psCard.offsetHeight + 'px');
-  });
-  ro.observe(psCard);
-}
-
-(function() {
-  const preloader = document.getElementById('preloader');
-  const inner     = document.getElementById('preloader-inner');
-  const bar       = document.getElementById('preloader-bar');
-
-  setTimeout(() => {
-    inner.classList.add('visible');
-    bar.style.width = '100%';
-  }, 120);
-
-  setTimeout(() => {
-    inner.classList.add('hidden');
-  }, 2000);
-
-  setTimeout(() => {
-    preloader.classList.add('fade-out');
-  }, 2600);
-
-  setTimeout(() => {
-    preloader.style.display = 'none';
-  }, 3200);
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const w=parseFloat(e.target.dataset.width);e.target.style.transform=`scaleX(${w})`;e.target.classList.add('animated');barObs.unobserve(e.target);}});},{threshold:.5});
+document.querySelectorAll('.skill-bar-fill').forEach(el=>barObs.observe(el));
+const nav=document.querySelector('nav');
+window.addEventListener('scroll',()=>{if(window.scrollY>80){nav.style.background='rgba(6,6,8,0.9)';nav.style.backdropFilter='blur(24px)';}else{nav.style.background='transparent';nav.style.backdropFilter='none';}});
+document.querySelectorAll('.btn-primary,.btn-ghost').forEach(btn=>{btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-(r.left+r.width/2))*.15}px,${(e.clientY-(r.top+r.height/2))*.15}px)`;});btn.addEventListener('mouseleave',()=>{btn.style.transform='';});});
+const psCard=document.getElementById('ps-card');
+if(psCard){const ro=new ResizeObserver(()=>{psCard.style.setProperty('--card-h',psCard.offsetHeight+'px');});ro.observe(psCard);}
+(function(){
+  const preloader=document.getElementById('preloader'),inner=document.getElementById('preloader-inner'),bar=document.getElementById('preloader-bar');
+  setTimeout(()=>{inner.classList.add('visible');bar.style.width='100%';},120);
+  setTimeout(()=>{inner.classList.add('hidden');},2000);
+  setTimeout(()=>{preloader.classList.add('fade-out');},2600);
+  setTimeout(()=>{preloader.style.display='none';},3200);
 })();
 </script>
 </body>
