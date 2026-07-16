@@ -149,8 +149,8 @@ section { position:relative; z-index:1; }
 .exp-stack { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
 .exp-pill { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; padding:5px 14px; border:1px solid rgba(0,255,135,0.2); color:rgba(0,255,135,0.6); }
 .exp-logo {
-  width: 120px; 
-  height: 120px; 
+  width: 50px;
+  height: 50px;
   display: flex; 
   align-items: center; 
   justify-content: center;
@@ -158,6 +158,11 @@ section { position:relative; z-index:1; }
   flex-shrink: 0;
   padding: 8px;
   transition: border-color .35s;
+} 
+.exp-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .exp-row:hover .exp-logo { border-color:var(--black); }
 .exp-logo svg { width:100%; height:auto; }
