@@ -149,17 +149,17 @@ section { position:relative; z-index:1; }
 .exp-stack { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
 .exp-pill { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; padding:5px 14px; border:1px solid rgba(0,255,135,0.2); color:rgba(0,255,135,0.6); }
 .exp-logo {
-  width: 180px; 
-  height: 180px; 
+  width: 170px; 
+  height: 170px; 
   display: flex; 
   align-items: center; 
   justify-content: center;
-  border: 1px solid var(--border);
+  border: 1px solid var(--black);
   flex-shrink: 0;
   padding: 8px;
   transition: border-color .35s;
 }
-.exp-row:hover .exp-logo { border-color:rgba(0,255,135,0.2); }
+.exp-row:hover .exp-logo { border-color:var(--black); }
 .exp-logo svg { width:100%; height:auto; }
 
 #toolkit { padding:120px 48px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
@@ -267,7 +267,7 @@ footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; al
         Threat Intelligence e Incident Response.
       </p>
       <div class="hero-cta reveal reveal-delay-3">
-        <a href="https://drive.google.com/file/d/1jZFkLYBPc9mhG1sKjHyG-kWoQkeWE2oy/preview"
+        <a href="./cv.pdf"
            target="_blank" rel="noopener noreferrer" class="btn-primary">
           Meu Currículo
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -422,7 +422,8 @@ footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; al
     </div>
     <!-- GarageTech logo SVG in green -->
     <div class="exp-logo">
- <img src="garagetech-logo.svg" alt="GarageTech" style="width:100%; height:auto;" />
+  <img src="garagetech-logo.svg" alt="GarageTech" 
+       style="width:100%; height:auto; filter: brightness(0) saturate(100%) invert(68%) sepia(98%) saturate(400%) hue-rotate(100deg) brightness(110%);" />
 </div>  
 </section>
 
