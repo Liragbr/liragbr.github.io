@@ -1,71 +1,50 @@
-# liragbr.github.io
+# Gabriel Lira — Portfolio
 
-Personal portfolio and professional presence of Gabriel Lira — Cybersecurity Analyst focused on Detection, Incident Response, and Adversary Simulation.
+Portfólio de cibersegurança com foco em detecção, resposta a incidentes e pesquisa aplicada.
 
-🌐 **Live:** [liragbr.github.io](https://liragbr.github.io)
+**Site:** https://liragbr.github.io/
 
----
+## Estrutura
 
-## Overview
+- `index.html`: conteúdo e estrutura semântica.
+- `styles.css`: layout responsivo, estilos e movimento reduzido.
+- `script.js`: menu mobile e estudo generativo ASCII em Canvas.
+- `404.html`: página de erro para GitHub Pages.
+- `social-card.svg` / `social-card.png`: fonte e exportação da imagem de compartilhamento.
+- `liragbr.svg`: favicon.
 
-A handcrafted, single-file portfolio built without frameworks or dependencies. Designed to reflect the precision and intentionality expected in security work — minimal attack surface, clean code, and full control over every detail.
+HTML, CSS e JavaScript sem framework ou build. Google Fonts é opcional: há fontes de sistema como fallback.
 
-### Technologies
+## Desenvolvimento
 
-| Layer | Detail |
-|---|---|
-| Markup | HTML5 |
-| Styling | CSS3 — custom properties, grid, animations |
-| Scripting | Vanilla JavaScript (ES6+) |
-| Fonts | Bebas Neue · DM Sans · JetBrains Mono via Google Fonts |
-| Hosting | GitHub Pages |
+Sirva a raiz com um servidor HTTP estático, por exemplo:
 
-No build tools. No frameworks. No dependencies beyond web fonts.
-
----
-
-## File Structure
-
-```
-liragbr.github.io/
-└── index.html        # Entire portfolio — markup, styles, and scripts in one file
-└── README.md
+```sh
+python3 -m http.server 8000
 ```
 
-The project is intentionally kept as a single self-contained file. This makes it trivial to audit, deploy, and maintain.
+Abra `http://localhost:8000`. O GitHub Pages serve estes mesmos arquivos, sem compilação.
 
----
+## Conteúdo
 
-## Sections
+HIDra é o projeto principal. Sua arquitetura é apresentada conforme o README público, distinguindo desenho documentado de implementação e resultados verificados. No snapshot de 2 de novembro de 2026, `server/c2_server.py` estava vazio. Atualize essa observação quando o servidor estiver publicado e validado.
 
-- **Hero** — role, headline, and CV link
-- **Projects** — technical projects with stack details (GhostRunner, Recon 1.0.v, WebRTC STUN Analyzer, and more)
-- **Freelance** — real-world engagements with expandable detail panels
-- **Toolkit** — tools and technologies used across lab, academic, and professional environments
-- **Contact** — email, LinkedIn, and GitHub
+Competências de estudo e laboratório ficam separadas da experiência operacional. O site não atribui percentuais subjetivos de domínio ou resultados que não estejam documentados.
 
----
+## Visual ASCII
 
-## Running Locally
+O hero usa um estudo generativo original de caracteres em Canvas, sem dependência externa. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e fallback estático sem JavaScript.
 
-No setup required. Open `index.html` directly in any modern browser.
+Esta versão não usa uma exportação do ASCII Magic. Para incorporar uma no futuro, mantenha uma imagem estática como fallback e preserve a opção de reduzir movimento.
 
-```bash
-git clone https://github.com/liragbr/liragbr.github.io.git
-cd liragbr.github.io
-open index.html
-```
+## Verificação manual
 
----
+- Desktop e mobile sem rolagem horizontal.
+- Navegação por teclado, menu mobile e Escape.
+- Botão de pausa, movimento reduzido e conteúdo sem JavaScript.
+- Links de projeto, contato e detalhes expansíveis.
+- Página 404 e metadados de compartilhamento.
 
-## License
+## Licença
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-You are free to use this code as reference or inspiration. Direct reproduction of the design as your own portfolio is discouraged — build something that represents you.
-
----
-
-<p align="center">
-  <sub>© 2026 Gabriel Lira — Built with intention, not with templates.</sub>
-</p>
+MIT. Consulte `LICENSE`.

@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-  <g id="liragbr_logo_perspective">
-    <!-- Haste Vertical (Stem) - Cor Principal -->
-    <path d="M33 22 L51.5 15.5 L51.5 73 L33 79.5 Z" fill="#00ff87"/>
-    <!-- Base Horizontal (Arm) - Tom Sombrado Derivado -->
-    <path d="M51.5 73 L77 64 L77 75 L51.5 84 Z" fill="#00cc6c"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0b0e0d"/><path d="M19 13v34h20M42 47h9" fill="none" stroke="#b6f77b" stroke-width="6"/></svg>
