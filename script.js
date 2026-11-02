@@ -60,6 +60,8 @@
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
     button.hidden = reduced.matches;
+    document.documentElement.dataset.motion = paused || reduced.matches ? 'paused' : 'running';
+    document.dispatchEvent(new Event('portfolio:motion'));
     if (canAnimate()) frame = requestAnimationFrame(tick); else draw();
   }
   function resize() {
@@ -69,7 +71,7 @@
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
   }
-  button.addEventListener('click', () => { paused = !paused; button.setAttribute('aria-pressed', String(paused)); button.textContent = paused ? 'Retomar animação' : 'Pausar animação'; sync(); });
+  button.addEventListener('click', () => { paused = !paused; button.setAttribute('aria-pressed', String(paused)); button.textContent = paused ? 'Retomar animações' : 'Pausar animações'; sync(); });
   new ResizeObserver(resize).observe(canvas);
   new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(figure);
   reduced.addEventListener('change', sync);
