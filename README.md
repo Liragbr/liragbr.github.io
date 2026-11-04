@@ -32,9 +32,9 @@ HIDra é o projeto principal. Sua arquitetura é apresentada conforme o README p
 
 Competências de estudo e laboratório ficam separadas da experiência operacional. O site não atribui percentuais subjetivos de domínio ou resultados que não estejam documentados.
 
-## Visual ASCII
+## Grafo de investigação
 
-O hero usa um crânio pontilhado em SVG, reconstruído sobre uma grade a partir da referência visual. Uma máscara de luz atravessa o desenho, que responde com deslocamento leve ao mouse. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e arte estática sem JavaScript.
+O hero usa um grafo SVG de um caso simulado. Os nós mostram identidade, endpoint, execução, DNS e destino externo. As evidências podem ser consultadas com mouse, toque ou teclado. Os pulsos pausam fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e uma versão estática sem JavaScript.
 
 A abertura de marca dura aproximadamente 1,45 s e aparece uma vez por aba. Pode ser dispensada por teclado ou clique; não intercepta interações e tem encerramento de segurança mesmo se o JavaScript principal falhar. Não representa progresso real de carregamento.
 
