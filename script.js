@@ -18,8 +18,11 @@
   const figure = document.querySelector('.signal-art');
   if (!figure) return;
   const button = figure.querySelector('.motion-toggle');
-  const readout = figure.querySelector('#signal-stage');
-  const stage = figure.querySelector('.signal-stage');
+  const map = figure.querySelector('.investigation-map');
+  const time = figure.querySelector('.investigation-time');
+  const detail = figure.querySelector('.investigation-detail');
+  const nodes = [...map.querySelectorAll('.map-node')];
+  let selected = map.querySelector('[aria-pressed="true"]');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let inView = true;
   let paused = false;
@@ -27,8 +30,6 @@
   function syncArt() {
     const active = inView && !document.hidden && !paused && !reduced.matches;
     figure.classList.toggle('signal-running', active);
-    readout.textContent = active ? 'SCAN / ACTIVE' : 'FRAME / STILL';
-    if (!active) resetPointer();
   }
   function syncMotion() {
     button.hidden = reduced.matches;
@@ -36,25 +37,31 @@
     document.dispatchEvent(new Event('portfolio:motion'));
     syncArt();
   }
-  function resetPointer() {
-    stage.style.removeProperty('--skull-x');
-    stage.style.removeProperty('--skull-y');
+  function showEvidence(node) {
+    if (map.dataset.evidence === node.dataset.node) return;
+    map.dataset.evidence = node.dataset.node;
+    time.textContent = node.dataset.time;
+    detail.textContent = node.dataset.detail;
   }
+  nodes.forEach(node => {
+    node.disabled = false;
+    node.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'mouse') showEvidence(node);
+    });
+    node.addEventListener('pointerleave', () => showEvidence(selected));
+    node.addEventListener('click', () => {
+      selected.setAttribute('aria-pressed', 'false');
+      selected = node;
+      selected.setAttribute('aria-pressed', 'true');
+      showEvidence(selected);
+    });
+  });
   button.addEventListener('click', () => {
     paused = !paused;
     button.setAttribute('aria-pressed', String(paused));
     button.textContent = paused ? 'Retomar animações' : 'Pausar animações';
     syncMotion();
   });
-  stage.addEventListener('pointermove', e => {
-    if (e.pointerType !== 'mouse' || !figure.classList.contains('signal-running')) return;
-    const { left, top, width, height } = stage.getBoundingClientRect();
-    if (!width || !height) return;
-    stage.style.setProperty('--skull-x', `${((e.clientX - left) / width - .5) * 13}px`);
-    stage.style.setProperty('--skull-y', `${((e.clientY - top) / height - .5) * 9}px`);
-  }, { passive: true });
-  stage.addEventListener('pointerleave', resetPointer);
-  stage.addEventListener('pointercancel', resetPointer);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;

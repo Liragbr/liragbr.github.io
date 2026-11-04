@@ -61,16 +61,74 @@
         <div class="actions"><a class="button primary" href="#hidra">Explorar meu trabalho <span aria-hidden="true">↗</span></a><a class="text-link" href="#contact">Entrar em contato <span aria-hidden="true">→</span></a></div>
       </div>
       <figure class="signal-art">
-        <div class="art-top mono"><span>SIGNAL / 001</span><span>FIG. 01</span></div>
-        <div class="signal-stage" aria-hidden="true">
-          <div class="skull-visual">
-            <img src="skull-field.svg" alt="" width="101" height="147" fetchpriority="high">
-            <img class="skull-scan" src="skull-field.svg" alt="" width="101" height="147">
+        <div class="art-top mono">
+          <span>INVESTIGAÇÃO / 001</span>
+          <button class="motion-toggle" type="button" hidden aria-pressed="false">Pausar animações</button>
+        </div>
+        <div class="signal-stage">
+          <div class="investigation-map" data-evidence="endpoint" role="group" aria-label="Grafo de investigação">
+            <svg class="investigation-links" viewBox="0 0 480 300" aria-hidden="true">
+              <defs>
+                <pattern id="map-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <circle cx="1" cy="1" r="1" fill="#596c53" opacity=".36"/>
+                </pattern>
+                <radialGradient id="map-grid-fade">
+                  <stop offset=".18" stop-color="white"/>
+                  <stop offset=".96" stop-color="white" stop-opacity="0"/>
+                </radialGradient>
+                <mask id="map-grid-mask">
+                  <rect width="480" height="300" fill="url(#map-grid-fade)"/>
+                </mask>
+                <path id="map-execution" pathLength="100" d="M235 102v36q0 20-20 20h-85q-20 0-20 20v39"/>
+                <path id="map-query" pathLength="100" d="M110 217h154q24 0 24-24v-69q0-24 24-24h24q20 0 20-20V51"/>
+                <path id="map-egress" pathLength="100" d="M110 217v37q0 20 20 20h236q20 0 20-20v-42"/>
+              </defs>
+              <rect width="480" height="300" fill="url(#map-grid)" mask="url(#map-grid-mask)"/>
+              <g class="investigation-rings">
+                <circle cx="235" cy="102" r="43"/>
+                <circle cx="235" cy="102" r="66" stroke-dasharray="2 6"/>
+                <path d="M235 24v10m0 136v10M157 102h10m136 0h10"/>
+              </g>
+              <g class="investigation-edges">
+                <path class="map-identity" d="M82 53h55q15 0 25 10l24 24q15 15 30 15h19"/>
+                <use class="map-endpoint map-process map-route" href="#map-execution"/>
+                <use class="map-process map-dns" href="#map-query"/>
+                <use class="map-process map-external map-route" href="#map-egress"/>
+                <path class="map-dns map-external" d="M356 51h54q20 0 20 20v121q0 20-20 20h-24" stroke-dasharray="3 6"/>
+              </g>
+              <g class="investigation-packets">
+                <use href="#map-execution"/>
+                <use href="#map-query"/>
+                <use href="#map-egress"/>
+              </g>
+            </svg>
+            <button class="map-node" style="--node-x:17.083%;--node-y:17.667%" type="button" disabled data-node="identity" data-time="09:40:58 / IDENTIDADE" data-detail="Sessão lab-user ativa em WS-042." aria-controls="investigation-evidence" aria-pressed="false">
+              <span class="map-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg></span>
+              <span>Identidade</span>
+            </button>
+            <button class="map-node map-node-anchor" style="--node-x:48.958%;--node-y:34%" type="button" disabled data-node="endpoint" data-time="09:41:08 / EDR" data-detail="WS-042 registra a execução do PowerShell." aria-controls="investigation-evidence" aria-pressed="true">
+              <span class="map-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4m-5 0h10m-9-9 2-2 2 2 3-3"/></svg></span>
+              <span>WS-042</span>
+            </button>
+            <button class="map-node" style="--node-x:22.917%;--node-y:72.333%" type="button" disabled data-node="process" data-time="09:41:08 / PROCESSO" data-detail="powershell.exe · PID 4120 · ATT&amp;CK T1059.001." aria-controls="investigation-evidence" aria-pressed="false">
+              <span class="map-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m7 9 3 3-3 3m6 0h4"/></svg></span>
+              <span>PowerShell</span>
+            </button>
+            <button class="map-node" style="--node-x:74.167%;--node-y:17%" type="button" disabled data-node="dns" data-time="09:41:09 / DNS" data-detail="WS-042 consulta sync.example e resolve 203.0.113.42." aria-controls="investigation-evidence" aria-pressed="false">
+              <span class="map-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3" ry="8"/><path d="M4 12h16"/></svg></span>
+              <span>DNS</span>
+            </button>
+            <button class="map-node" style="--node-x:80.417%;--node-y:70.667%" type="button" disabled data-node="external" data-time="09:41:10 / NDR" data-detail="WS-042 inicia TLS para 203.0.113.42:443." aria-controls="investigation-evidence" aria-pressed="false">
+              <span class="map-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7 7.5h1m-1 9h1m6-9h3m-3 9h3"/></svg></span>
+              <span>Destino externo</span>
+            </button>
           </div>
         </div>
-        <div class="signal-readout mono" aria-hidden="true"><span>GLYPH FIELD</span><span id="signal-stage">FRAME / STILL</span></div>
-        <figcaption><span class="status-dot" aria-hidden="true"></span> Crânio em ASCII<span class="mono">ARTE GENERATIVA</span></figcaption>
-        <button class="motion-toggle" type="button" hidden aria-pressed="false">Pausar animações</button>
+        <div class="signal-readout" id="investigation-evidence" aria-live="polite">
+          <span class="investigation-time mono">09:41:08 / EDR</span>
+          <span class="investigation-detail">WS-042 registra a execução do PowerShell.</span>
+        </div>
+        <figcaption><span class="status-dot" aria-hidden="true"></span> Do sinal à evidência<span class="mono">CASO SIMULADO</span></figcaption>
       </figure>
       <div class="hero-bottom mono"><span>BRASÍLIA, BR <span class="muted">/</span> UTC−03</span><span>DEFENDER. INVESTIGAR. CONSTRUIR.</span><a href="#Projetos">SCROLL TO EXPLORE ↓</a></div>
     </section>
