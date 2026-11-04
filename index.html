@@ -42,7 +42,6 @@
     </div>
     <span class="intro-coordinate mono">BRASÍLIA, BR / 2026</span>
   </div>
-  <div class="cursor-halo" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Pular para o conteúdo</a>
   <header class="site-header">
     <a class="brand" href="#" aria-label="Gabriel Lira, início">lira<span>gbr</span><i aria-hidden="true">_</i></a>
@@ -61,22 +60,39 @@
         <div class="actions"><a class="button primary" href="#hidra">Explorar meu trabalho <span aria-hidden="true">↗</span></a><a class="text-link" href="#contact">Entrar em contato <span aria-hidden="true">→</span></a></div>
       </div>
       <figure class="signal-art">
-        <div class="art-top mono"><span>SIGNAL / 001</span><span>ASCII FIELD</span></div>
-        <pre class="ascii-fallback" aria-hidden="true">                  . : + : .
-             . : + # @ # + : .
-          . : # @ + : . : + @ # : .
-        : # @ : .         . : @ # :
-       + @ :    . : + : .    : @ +
-      # +    : # @ # @ # :    + #
-      @ :   + @ : . : @ +   : @
-      # +    : # @ # @ # :    + #
-       + @ :    . : + : .    : @ +
-        : # @ : .         . : @ # :
-          . : # @ + : . : + @ # : .
-             . : + # @ # + : .
-                  . : + : .</pre>
+        <div class="art-top mono"><span>HIDRA / HARDWARE SIGNAL</span><span>FIG. 01</span></div>
+        <div class="signal-stage">
+        <pre class="ascii-fallback" aria-hidden="true">
+                  .---- USB ----.
+                  |  :::::::::  |
+           .======+=============+======.
+          /@@  .   \    |   /   .   @@/|
+     01  |O|--+---+---+---+---+-----|O|#
+         |O|  |  .:.:.:.:.:.:.   o  |O|#
+     03  |O|--+--.---------------.--|O|#
+         |O|     | + + + + + + + |  |O|#
+     05  |O|--+--| ############# |--|O|#
+         |O|  |  | #  RP2040   # |  |O|#
+     07  |O|--+--| # DUAL CORE # |--|O|#
+         |O|  |  | ############# |  |O|#
+     09  |O|--+--| + + + + + + + |--|O|#
+         |O|  |  '---------------'  |O|#
+     11  |O|--+----.    |    .------+O|#
+         |O|  :  [01]   +   [10]  : |O|#
+     13  |O|------+-----+-----+-----|O|#
+         |O|   :  |  .:::::.  |  :  |O|#
+     15  |O|------+--| WI-FI|-+-----|O|#
+         |O|   :     '------'    :  |O|#
+     17  |O|--------+       +-------|O|#
+         |O|        |       |       |O|#
+         |@|   .----'       '---.   |@|#
+          \_____|_+---+---+---+__|____/#/
+           '=====|===|===|===|======='
+                   P I C O   W</pre>
         <canvas id="signal-canvas" aria-hidden="true"></canvas>
-        <figcaption><span class="status-dot" aria-hidden="true"></span> Do sinal à evidência.<span class="mono">GENERATIVE STUDY</span></figcaption>
+        </div>
+        <div class="signal-readout mono" aria-hidden="true"><span>USB HID / RP2040</span><span id="signal-stage">SCAN / USB</span></div>
+        <figcaption><span class="status-dot" aria-hidden="true"></span> HIDra · Raspberry Pi Pico W<span class="mono">ILUSTRAÇÃO / LAB</span></figcaption>
         <button class="motion-toggle" hidden aria-pressed="false">Pausar animações</button>
       </figure>
       <div class="hero-bottom mono"><span>BRASÍLIA, BR <span class="muted">/</span> UTC−03</span><span>DEFENDER. INVESTIGAR. CONSTRUIR.</span><a href="#Projetos">SCROLL TO EXPLORE ↓</a></div>
@@ -117,7 +133,32 @@
       <div><p class="eyebrow">02 / EM OPERAÇÃO</p><h2 id="experience-title">Da análise<br>à resposta.</h2><p class="section-intro">Experiência em SOC, investigação de comportamentos suspeitos e documentação de evidências.</p></div>
       <article class="experience-card"><div class="experience-meta mono"><span>JUN 2026 — ATUAL</span><span><span class="status-dot" aria-hidden="true"></span> ATIVO</span></div><h3>GarageTech</h3><p class="role">SOC Analyst <span>Brasília, DF · Presencial</span></p><ul class="experience-list"><li>Triagem de alertas, correlação de eventos e investigação de anomalias de rede com NDR e eventos de endpoint com EDR.</li><li>Gestão de incidentes e acompanhamento de SLAs com DeskManager.</li><li>Aplicação de MITRE ATT&CK na análise de comportamentos e resposta seguindo NIST SP 800-61.</li><li>Elaboração de relatórios técnicos e documentação de evidências para apoiar a investigação.</li></ul><div class="tags"><span>Threat Detection</span><span>Incident Response</span><span>ITSM</span></div></article>
     </div></section>
-    <section id="toolkit" class="toolkit wrap" aria-labelledby="toolkit-title"><div class="section-heading"><div><p class="eyebrow">03 / COMPETÊNCIAS</p><h2 id="toolkit-title">Ferramentas. Método. Contexto.</h2></div><p>Da rotina operacional à pesquisa em laboratório.</p></div><div class="capability-grid"><article><span class="capability-num mono">[ 01 ]</span><h3>Detecção & resposta</h3><p>Monitoramento, triagem, correlação e gestão de incidentes.</p><div class="tags"><span>NDR</span><span>EDR / XDR</span><span>DeskManager</span></div></article><article><span class="capability-num mono">[ 02 ]</span><h3>Frameworks & análise</h3><p>Comportamentos adversários, análise de rede e documentação de evidências.</p><div class="tags"><span>MITRE ATT&CK</span><span>NIST SP 800-61</span><span>Wireshark</span></div></article><article><span class="capability-num mono">[ 03 ]</span><h3>Pesquisa & construção</h3><p>Automação, protocolos de rede e experimentação em ambientes de laboratório.</p><div class="tags"><span>Python / Bash</span><span>C / C++</span><span>Linux</span></div></article></div><details class="more-projects"><summary>Ferramentas de estudo e laboratório <span aria-hidden="true">+</span></summary><p class="lab-tools">Splunk · Wazuh · Microsoft Sentinel · Metasploit · Burp Suite · Nmap · Volatility · Autopsy · TShark · C#</p></details></section>
+    <section id="toolkit" class="toolkit wrap" aria-labelledby="toolkit-title"><div class="section-heading"><div><p class="eyebrow">03 / COMPETÊNCIAS</p><h2 id="toolkit-title">Ferramentas. Método. Contexto.</h2></div><p>Da rotina operacional à pesquisa em laboratório.</p></div><div class="capability-grid"><article><span class="capability-num mono">[ 01 ]</span><h3>Detecção & resposta</h3><p>Monitoramento, triagem, correlação e gestão de incidentes.</p><div class="tags"><span>NDR</span><span>EDR / XDR</span><span>DeskManager</span></div></article><article><span class="capability-num mono">[ 02 ]</span><h3>Frameworks & análise</h3><p>Comportamentos adversários, análise de rede e documentação de evidências.</p><div class="tags"><span>MITRE ATT&CK</span><span>NIST SP 800-61</span><span>Wireshark</span></div></article><article><span class="capability-num mono">[ 03 ]</span><h3>Pesquisa & construção</h3><p>Automação, protocolos de rede e experimentação em ambientes de laboratório.</p><div class="tags"><span>Python / Bash</span><span>C / C++</span><span>Linux</span></div></article></div>
+      <div class="lab-block">
+        <p class="eyebrow">LAB / TRILHAS DE ESTUDO</p>
+        <h3>Emulação, investigação e engenharia reversa.</h3>
+        <div class="capability-grid lab-grid">
+          <article>
+            <span class="capability-num mono">01 / PURPLE TEAM</span>
+            <h4>Atomic Red Team</h4>
+            <p>Emular técnicas do MITRE ATT&amp;CK em laboratório e conferir quais eventos e alertas chegam ao SOC.</p>
+            <a href="https://www.atomicredteam.io/docs/atomic-red-team" class="text-link">Documentação <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span class="capability-num mono">02 / DFIR</span>
+            <h4>Velociraptor</h4>
+            <p>Coletar artefatos de endpoints com VQL e montar uma linha do tempo para investigar a atividade observada.</p>
+            <a href="https://docs.velociraptor.app/docs/artifacts/" class="text-link">Documentação <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <span class="capability-num mono">03 / REVERSE ENGINEERING</span>
+            <h4>Ghidra</h4>
+            <p>Analisar binários e firmware com disassembly e decompilação para entender fluxos e chamadas.</p>
+            <a href="https://github.com/NationalSecurityAgency/ghidra" class="text-link">Repositório <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
     <section id="contact" class="contact wrap" aria-labelledby="contact-title"><div><p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ABERTO A NOVAS CONEXÕES</p><h2 id="contact-title">Vamos conectar<br>os próximos <em>pontos.</em></h2><p>Oportunidades em segurança, colaboração técnica ou uma boa conversa sobre detecção e pesquisa.</p><a class="contact-email" href="mailto:Liraadev@gmail.com">Liraadev@gmail.com <span aria-hidden="true">↗</span></a></div><div class="contact-links"><a href="https://www.linkedin.com/in/Liragbr" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a><a href="https://github.com/Liragbr" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><a href="#">Voltar ao início <span aria-hidden="true">↑</span></a></div></section>
   </main>
   <footer class="wrap mono"><span>© <span id="year">2026</span> GABRIEL LIRA</span><span>CONSTRUÍDO COM INTENÇÃO.</span><span>BRASÍLIA / BR</span></footer>

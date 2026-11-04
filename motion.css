@@ -13,8 +13,16 @@
 @keyframes intro-type{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes intro-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes intro-caret{50%{opacity:0}}
-.cursor-halo{display:none;position:fixed;left:0;top:0;width:38px;height:38px;border:1px solid #b6f77b80;border-radius:50%;z-index:150;pointer-events:none;opacity:0;transition:width .25s,height .25s,border-color .25s,background .25s,opacity .2s;will-change:transform}
-.pointer-effects .cursor-halo{display:block}.cursor-visible .cursor-halo{opacity:1}.cursor-interactive .cursor-halo{width:58px;height:58px;border-color:var(--green);background:#b6f77b0a}.cursor-pressed .cursor-halo{width:26px;height:26px;background:#b6f77b20}
+/* Browser-owned cursors keep working over a stationary mouse during scroll. */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: url("cursor-arrow.svg") 3 3, auto; }
+  a, button, summary { cursor: url("cursor-target.svg") 12 12, pointer; }
+  input, textarea, [contenteditable=true] { cursor: text; }
+}
+@media (forced-colors: active) {
+  html { cursor: auto; }
+  a, button, summary { cursor: pointer; }
+}
 .project-card,.featured-project,.capability-grid article,.signal-art{--spot-x:50%;--spot-y:50%;--spot-opacity:0;--tilt-x:0deg;--tilt-y:0deg}
 .project-card,.featured-project,.capability-grid article{position:relative}
 .project-card,.featured-project,.signal-art{transform:perspective(1100px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));transition:transform .45s cubic-bezier(.2,.75,.2,1),border-color .3s,background .3s,box-shadow .3s}
@@ -46,6 +54,6 @@ nav>a{position:relative}nav>a::after{content:'';position:absolute;bottom:-8px;le
 [data-motion=paused] *,[data-motion=paused] *::before,[data-motion=paused] *::after{animation:none!important;transition:none!important}
 [data-motion=paused] .project-card,[data-motion=paused] .featured-project,[data-motion=paused] .signal-art{transform:none}
 [data-motion=paused] .card-top>span:last-child,[data-motion=paused] .button>span,[data-motion=paused] .text-link>span,[data-motion=paused] .nav-contact>span,[data-motion=paused] .contact-email>span,[data-motion=paused] .contact-links a>span,[data-motion=paused] .other-projects>a>span:last-child,[data-motion=paused] .featured-body h3>span{transform:none}
-@media(pointer:coarse),(hover:none){.cursor-halo{display:none!important}.project-card,.featured-project,.signal-art{transform:none}.pointer-effects .button,.pointer-effects .brand,.pointer-effects .nav-contact{translate:none}}
+@media(pointer:coarse),(hover:none){.project-card,.featured-project,.signal-art{transform:none}.pointer-effects .button,.pointer-effects .brand,.pointer-effects .nav-contact{translate:none}}
 @media(max-width:760px){.intro-content{width:calc(100% - 56px)}.intro-coordinate{left:28px;bottom:28px}.hero-intro{max-width:540px}}
-@media(prefers-reduced-motion:reduce){.intro-overlay,.cursor-halo{display:none!important}.reveal-ready{opacity:1;transform:none}.project-card,.featured-project,.signal-art{transform:none}.pointer-effects .button,.pointer-effects .brand,.pointer-effects .nav-contact{translate:none}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.intro-overlay{display:none!important}.reveal-ready{opacity:1;transform:none}.project-card,.featured-project,.signal-art{transform:none}.pointer-effects .button,.pointer-effects .brand,.pointer-effects .nav-contact{translate:none}*,*::before,*::after{animation:none!important;transition:none!important}}

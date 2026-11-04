@@ -21,39 +21,48 @@
   if (!ctx) return;
   const figure = canvas.closest('figure');
   const button = figure.querySelector('.motion-toggle');
+  const readout = figure.querySelector('#signal-stage');
+  const rows = figure.querySelector('.ascii-fallback').textContent.trimEnd().replace(/^\n/, '').split('\n');
+  const columns = Math.max(...rows.map(row => row.length));
+  const stages = ['SCAN / USB', 'SCAN / MCU', 'SCAN / RF'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let width = 0, height = 0, frame = 0, last = 0, visible = true, paused = false, phase = 0;
-  const glyphs = ' .:+*#%@';
   function draw() {
+    if (width < 24 || height < 24) return;
     ctx.clearRect(0, 0, width, height);
-    const step = width < 400 ? 8 : 9;
-    const sy = step * 1.32;
-    const scale = Math.min(width * .44, height * .43);
-    ctx.font = `${step}px monospace`;
-    ctx.textAlign = 'center';
-    for (let y = sy; y < height; y += sy) {
-      for (let x = step; x < width; x += step) {
-        const nx = (x - width / 2) / scale, ny = (y - height / 2) / scale;
-        const angle = Math.atan2(ny, nx), r = Math.hypot(nx, ny);
-        const contour = .79 + .065 * Math.sin(angle * 5 + phase * .24) + .035 * Math.cos(angle * 9 - phase * .18);
-        const shell = Math.exp(-Math.pow((r - contour) * 10, 2));
-        const inner = Math.exp(-Math.pow((r - .38 - .035 * Math.sin(angle * 4 - phase * .2)) * 12, 2)) * .8;
-        const sweep = .6 + .4 * Math.cos(angle - phase * .4 + r * 4);
-        const value = Math.min(1, Math.max(shell, inner) * sweep);
-        if (value < .04) {
-          if (Math.round(x / step) % 8 === 0 && Math.round(y / sy) % 5 === 0) { ctx.fillStyle = '#31402c'; ctx.fillText('+', x, y); }
-          continue;
-        }
-        ctx.fillStyle = `rgba(182,247,123,${.2 + value * .8})`;
-        ctx.fillText(glyphs[Math.min(glyphs.length - 1, Math.floor(value * glyphs.length))], x, y);
-      }
+    const fontSize = Math.min(15, (width - 12) / (columns * .63), (height - 8) / (rows.length * 1.04));
+    ctx.font = `500 ${fontSize}px monospace`;
+    ctx.textBaseline = 'top';
+    const cellWidth = ctx.measureText('M').width;
+    const rowHeight = fontSize * 1.04;
+    const startX = (width - cellWidth * columns) / 2;
+    const startY = (height - rowHeight * rows.length) / 2;
+    const scan = phase % (rows.length + 6) - 3;
+    const scanning = canAnimate();
+    const stage = stages[Math.max(0, Math.min(2, Math.floor(scan / (rows.length / 3))))];
+    if (readout.textContent !== stage) readout.textContent = stage;
+    if (scanning && scan >= 0 && scan < rows.length) {
+      ctx.fillStyle = '#b6f77b22';
+      ctx.fillRect(startX + 3 * cellWidth, startY + scan * rowHeight, (columns - 3) * cellWidth, 1);
     }
+    rows.forEach((row, y) => {
+      const beam = scanning ? Math.max(0, 1 - Math.abs(y - scan) / 4) : 0;
+      for (let x = 0; x < row.length; x += 1) {
+        const glyph = row[x];
+        if (glyph === ' ') continue;
+        const pin = glyph === 'O' || glyph === '@';
+        const label = /[A-Z0-9]/.test(glyph) && !pin;
+        const base = label ? .92 : pin ? .74 : glyph === '.' || glyph === ':' ? .38 : .56;
+        ctx.fillStyle = label ? '#e0f6d0' : `rgba(182,247,123,${Math.min(1, base + beam * .55)})`;
+        ctx.fillText(glyph, startX + x * cellWidth, startY + y * rowHeight);
+      }
+    });
   }
   function canAnimate() { return visible && !document.hidden && !paused && !reduced.matches; }
   function tick(time) {
     frame = 0;
     if (!canAnimate()) return;
-    if (time - last > 80) { phase += .045; draw(); last = time; }
+    if (time - last > 64) { phase += .48; draw(); last = time; }
     frame = requestAnimationFrame(tick);
   }
   function sync() {
