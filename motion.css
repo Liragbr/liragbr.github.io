@@ -14,14 +14,29 @@
 @keyframes intro-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes intro-caret{50%{opacity:0}}
 /* Browser-owned cursors keep working over a stationary mouse during scroll. */
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
   html { cursor: url("cursor-arrow.svg") 3 3, auto; }
-  a, button, summary { cursor: url("cursor-target.svg") 12 12, pointer; }
+  a[href], button:enabled, summary { cursor: url("cursor-hover.svg") 3 3, pointer; }
   input, textarea, [contenteditable=true] { cursor: text; }
 }
-@media (forced-colors: active) {
-  html { cursor: auto; }
-  a, button, summary { cursor: pointer; }
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) and (prefers-reduced-motion: no-preference) {
+  html:not([data-motion=paused]) :is(a[href], button:enabled, summary):active {
+    cursor: url("cursor-pressed.svg") 3 3, pointer;
+  }
+}
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 150;
+  pointer-events: none;
+}
+@media (hover: none), (pointer: coarse), (forced-colors: active), (prefers-reduced-motion: reduce) {
+  .cursor-trail { display: none; }
+}
+[data-motion=paused] .cursor-trail {
+  display: none;
 }
 .project-card,.featured-project,.capability-grid article,.signal-art{--spot-x:50%;--spot-y:50%;--spot-opacity:0;--tilt-x:0deg;--tilt-y:0deg}
 .project-card,.featured-project,.capability-grid article{position:relative}

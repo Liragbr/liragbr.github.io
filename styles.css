@@ -19,23 +19,24 @@
   position: relative;
   display: grid;
   place-items: center;
-  padding: 22px 0 4px;
-  container-type: inline-size;
+  padding: 26px 0 4px;
+  container-type: size;
   overflow: hidden;
-  background-image: radial-gradient(circle, #b6f77b24 1px, transparent 1px);
-  background-size: 22px 22px;
+  background-image: radial-gradient(circle, #b6f77b17 1px, transparent 1px);
+  background-size: 28px 28px;
   background-position: center;
 }
 .ascii-fallback {
-  font: 500 clamp(6px, 2.65cqi, 12px)/1.04 var(--mono);
-  color: #a3cb87;
+  font: 500 7px/.78 var(--mono);
+  font-size: min(3.1cqi, 2.34cqh, 10.5px);
+  color: #b0d19a;
   margin: 0;
 }
 #signal-canvas {
   position: absolute;
-  inset: 20px 0 0;
+  inset: 26px 0 0;
   width: 100%;
-  height: calc(100% - 20px);
+  height: calc(100% - 30px);
 }
 .signal-readout {
   display: flex;
