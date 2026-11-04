@@ -30,6 +30,7 @@
   </script>
   <script src="interactions.js" defer></script>
   <script src="script.js" defer></script>
+  <script type="module" src="hidra-keyboard.js"></script>
 </head>
 <body>
   <div class="intro-overlay" aria-hidden="true" inert>
@@ -108,6 +109,13 @@
           <p>Projeto de laboratório para Raspberry Pi Pico W que explora USB HID e controle remoto por Wi-Fi. A arquitetura documentada combina firmware em C/C++, comunicação TLS 1.3 e integridade de mensagens com HMAC-SHA256.</p>
           <div class="tags"><span>C / C++</span><span>Pico W</span><span>TinyUSB</span><span>mbedTLS</span><span>Python</span></div>
           <a class="button primary" href="https://github.com/Liragbr/HIDra" target="_blank" rel="noopener noreferrer">Explorar repositório <span aria-hidden="true">↗</span></a>
+          <figure class="hidra-keyboard">
+            <div class="hidra-keyboard-frame">
+              <img src="vendor/hairline/keyboard-rest.svg" alt="" width="400" height="320" loading="lazy" decoding="async">
+              <div class="hidra-keyboard-stage" aria-hidden="true"></div>
+            </div>
+            <figcaption class="mono"><span>TECLADO USB HID</span><span>SVG / HAIRLINE</span></figcaption>
+          </figure>
         </div>
         <div class="architecture">
           <div class="architecture-heading mono"><span>HIDra / ARQUITETURA DOCUMENTADA</span><span>LAB</span></div>
