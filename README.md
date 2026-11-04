@@ -34,13 +34,11 @@ Competências de estudo e laboratório ficam separadas da experiência operacion
 
 ## Visual ASCII
 
-O hero usa uma ilustração ASCII original inspirada na placa Pico W do HIDra. O Canvas reaproveita o desenho estático do HTML e ilumina as trilhas em uma varredura ilustrativa de USB, MCU e Wi-Fi. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e fallback estático sem JavaScript.
+O hero usa um crânio pontilhado composto com caracteres ASCII. O Canvas reaproveita o desenho estático do HTML, passa uma faixa de luz pelo crânio e responde com deslocamento leve ao mouse. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e fallback estático sem JavaScript.
 
 A abertura de marca dura aproximadamente 1,45 s e aparece uma vez por aba. Pode ser dispensada por teclado ou clique; não intercepta interações e tem encerramento de segurança mesmo se o JavaScript principal falhar. Não representa progresso real de carregamento.
 
-Em dispositivos com mouse, o CSS usa uma seta personalizada e uma mira sobre elementos interativos. O navegador mantém o ponteiro no scroll sem depender de eventos de movimento. Cards respondem com brilho localizado e inclinação discreta, botões têm magnetismo leve e setas respondem ao hover. O controle “Pausar animações” e `prefers-reduced-motion` desativam os efeitos animados.
-
-A [biblioteca ASCII Magic](https://www.ascii-magic.com/ascii) serviu de referência para o enquadramento de terminal e a varredura. O desenho da placa foi criado para este portfólio.
+Em dispositivos com mouse, o CSS usa uma seta verde original que clareia sobre links e botões. O navegador mantém o ponteiro no scroll, enquanto um Canvas separado desenha um rastro breve durante o movimento. Cards respondem com brilho localizado e inclinação discreta, botões têm magnetismo leve e setas respondem ao hover. O controle “Pausar animações” e `prefers-reduced-motion` desativam os efeitos animados.
 
 ## Verificação manual
 
@@ -48,7 +46,7 @@ A [biblioteca ASCII Magic](https://www.ascii-magic.com/ascii) serviu de referên
 - Navegação por teclado, menu mobile e Escape.
 - Botão de pausa, movimento reduzido e conteúdo sem JavaScript.
 - Abertura na primeira visita da aba, encerramento por teclado/clique e ausência em novas navegações da mesma sessão.
-- Cursor em mouse (incluindo mudança para mira em links e persistência no scroll), retorno dos cards e botões ao repouso, ausência dos efeitos em touch.
+- Cursor em mouse (incluindo realce em links, dissipação do rastro e persistência da seta no scroll), retorno dos cards e botões ao repouso, ausência dos efeitos de ponteiro em touch.
 - Links de projeto, contato e detalhes expansíveis.
 - Página 404 e metadados de compartilhamento.
 
