@@ -34,7 +34,7 @@ Competências de estudo e laboratório ficam separadas da experiência operacion
 
 ## Visual ASCII
 
-O hero usa um crânio pontilhado composto com caracteres ASCII. O Canvas reaproveita o desenho estático do HTML, passa uma faixa de luz pelo crânio e responde com deslocamento leve ao mouse. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e fallback estático sem JavaScript.
+O hero usa um crânio pontilhado em SVG, reconstruído sobre uma grade a partir da referência visual. Uma máscara de luz atravessa o desenho, que responde com deslocamento leve ao mouse. A animação pausa fora de tela, em abas ocultas e quando o visitante prefere movimento reduzido. Há controle manual de pausa e arte estática sem JavaScript.
 
 A abertura de marca dura aproximadamente 1,45 s e aparece uma vez por aba. Pode ser dispensada por teclado ou clique; não intercepta interações e tem encerramento de segurança mesmo se o JavaScript principal falhar. Não representa progresso real de carregamento.
 

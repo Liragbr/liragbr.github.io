@@ -32,7 +32,7 @@
   z-index: 150;
   pointer-events: none;
 }
-@media (hover: none), (pointer: coarse), (forced-colors: active), (prefers-reduced-motion: reduce) {
+@media (forced-colors: active), (prefers-reduced-motion: reduce) {
   .cursor-trail { display: none; }
 }
 [data-motion=paused] .cursor-trail {
