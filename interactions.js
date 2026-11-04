@@ -52,6 +52,7 @@
   const trail = document.createElement('canvas');
   const trailContext = trail.getContext('2d');
   const points = [];
+  const trailLifetime = 260;
   let trailFrame = 0;
   trail.className = 'cursor-trail';
   trail.setAttribute('aria-hidden', 'true');
@@ -74,31 +75,41 @@
   function drawTrail(time) {
     trailFrame = 0;
     const overLink = points[points.length - 1].overLink;
-    const lifetime = overLink ? 120 : 170;
-    while (points.length && time - points[0].time >= lifetime) points.shift();
+    while (points.length && time - points[0].time >= trailLifetime) points.shift();
     trailContext.clearRect(0, 0, innerWidth, innerHeight);
     if (points.length < 2) return;
 
-    let remaining = overLink ? 40 : 64;
+    const maxLength = overLink ? 76 : 110;
+    let remaining = maxLength;
     for (let i = points.length - 1; i > 0 && remaining > 0; i--) {
       const head = points[i], tail = points[i - 1];
       const length = Math.hypot(head.x - tail.x, head.y - tail.y);
       if (!length) continue;
       const fraction = Math.min(1, remaining / length);
-      const fade = 1 - Math.max(0, time - tail.time) / lifetime;
+      const endX = head.x + (tail.x - head.x) * fraction;
+      const endY = head.y + (tail.y - head.y) * fraction;
+      const headFade = (1 - Math.max(0, time - head.time) / trailLifetime) * (remaining / maxLength);
+      const tailFade = (1 - Math.max(0, time - tail.time) / trailLifetime) * (Math.max(0, remaining - length) / maxLength);
+      const glow = trailContext.createLinearGradient(head.x, head.y, endX, endY);
+      glow.addColorStop(0, `rgba(186,255,139,${headFade})`);
+      glow.addColorStop(1, `rgba(157,250,105,${tailFade})`);
       trailContext.beginPath();
       trailContext.moveTo(head.x, head.y);
-      trailContext.lineTo(head.x + (tail.x - head.x) * fraction, head.y + (tail.y - head.y) * fraction);
-      trailContext.strokeStyle = `rgba(182,247,123,${fade * (overLink ? .43 : .32)})`;
-      trailContext.lineWidth = .55 + fade * 1.35;
+      trailContext.lineTo(endX, endY);
+      trailContext.strokeStyle = glow;
+      trailContext.globalAlpha = .24;
+      trailContext.lineWidth = 3 + headFade * 3;
+      trailContext.stroke();
+      trailContext.globalAlpha = .95;
+      trailContext.lineWidth = 1 + headFade * 1.5;
       trailContext.stroke();
       remaining -= length;
     }
     trailFrame = requestAnimationFrame(drawTrail);
   }
   function trackTrail(e) {
-    if (!trailContext || forcedColors.matches || e.pointerType !== 'mouse' ||
-        e.target.closest(textField) || ((e.buttons & 1) && !e.target.closest(clickable))) {
+    if (!trailContext || !motionAllowed() || forcedColors.matches || e.pointerType !== 'mouse' ||
+        e.target.closest?.(textField) || ((e.buttons & 1) && !e.target.closest?.(clickable))) {
       clearTrail();
       return;
     }
@@ -109,11 +120,10 @@
     const time = performance.now();
     const previous = points[points.length - 1];
     const { clientX: x, clientY: y } = e;
-    if (previous && (time - previous.time > 120 || Math.hypot(x - previous.x, y - previous.y) > 120)) {
-      clearTrail();
-    }
-    points.push({ x, y, time, overLink: Boolean(e.target.closest(clickable)) });
-    if (points.length > 22) points.shift();
+    if (previous && time - previous.time >= trailLifetime) clearTrail();
+    if (previous && previous.x === x && previous.y === y) return;
+    points.push({ x, y, time, overLink: Boolean(e.target.closest?.(clickable)) });
+    if (points.length > 48) points.shift();
     if (!trailFrame && points.length > 1) trailFrame = requestAnimationFrame(drawTrail);
   }
   function resetSurface() {
@@ -136,7 +146,6 @@
   }
   function pointerMove(e) {
     if (!fine.matches || !motionAllowed() || e.pointerType === 'touch') return;
-    trackTrail(e);
     const { clientX: x, clientY: y } = e;
     const nextSurface = e.target.closest('.project-card,.featured-project,.capability-grid article,.signal-art');
     if (nextSurface !== surface) { resetSurface(); surface = nextSurface; }
@@ -165,6 +174,7 @@
     if (!allowed) { dismissIntro(); revealAll(); }
     if (!allowed || !fine.matches) resetHover();
   }
+  document.addEventListener('pointermove', trackTrail, { capture: true, passive: true });
   document.addEventListener('pointermove', pointerMove, { passive: true });
   document.addEventListener('pointercancel', resetHover, { passive: true });
   document.addEventListener('pointerleave', resetHover);
@@ -172,7 +182,7 @@
   document.addEventListener('visibilitychange', () => { if (document.hidden) resetHover(); });
   document.addEventListener('portfolio:motion', syncMotion);
   window.addEventListener('blur', resetHover);
-  window.addEventListener('scroll', resetHover, { passive: true });
+  window.addEventListener('scroll', () => { resetSurface(); resetMagnet(); }, { passive: true });
   window.addEventListener('resize', sizeTrail, { passive: true });
   forcedColors.addEventListener('change', clearTrail);
   reduced.addEventListener('change', syncMotion);
